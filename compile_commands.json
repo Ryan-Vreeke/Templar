@@ -1,0 +1,10 @@
+[
+  {
+    "directory": "/home/ryan/source/template++",
+    "arguments": [
+      "g++",
+      "-I./includes"
+    ],
+    "file": "main.cpp"
+  }
+]

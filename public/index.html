@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title></title>
+    <link href="css/style.css" rel="stylesheet" />
+  </head>
+  <body>
+    {{ def block "index" .}}
+    <h1>Hello</h1>
+    {{end}}
+
+    {{block "swap" .}}
+  </body>
+</html>
+
+{{ def block "swap" . }}
+<h5>new hello</h5>
+{{end}}
