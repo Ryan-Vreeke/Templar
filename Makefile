@@ -1,5 +1,5 @@
 CC=g++
-CFLAGS=-std=c++20 -I./includes -g
+CFLAGS=-std=c++20 -I./includes -pthread -g
 
 SRCDIR=src
 SOURCES=$(wildcard $(SRCDIR)/*.cpp)
