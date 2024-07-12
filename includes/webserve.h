@@ -16,6 +16,7 @@ public:
   ~webserve();
 
   void start();
+  void send_page(std::string response);
 
 private:
   std::function<void(recv_cb_t)> recv_cb;

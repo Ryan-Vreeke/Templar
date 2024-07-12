@@ -12,8 +12,7 @@
 
 #define SA struct sockaddr
 
-webserve::webserve(std::function<void(recv_cb_t)> cb, int port)
-    : port(port), recv_cb(cb) {
+webserve::webserve(std::function<void(recv_cb_t)> cb, int port) : port(port), recv_cb(cb) {
   int conn_fd;
   struct sockaddr_in addr, cli;
   int opt = 1;
@@ -88,6 +87,18 @@ void webserve::handle_client(int client_fd) {
   recv_cb(cb);
 
   close(client_fd);
+}
+
+
+void webserve::send_page(std::string response){
+  std::string headers = "HTTP/1.1 200 OK\r\nContent-Type: text/html; charset=UTF-8\r\n";
+  response += "\r\n";
+  response += html;
+  response += "\r\n\r\n";
+
+  std::cout << response << std::endl;
+
+  send(cb.client_fd, response.c_str(), response.length(), 0);
 }
 
 void webserve::listen_loop() {
