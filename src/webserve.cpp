@@ -2,12 +2,8 @@
 #include <asm-generic/socket.h>
 #include <cstdio>
 #include <cstring>
-#include <format>
-#include <iostream>
 #include <netinet/in.h>
-#include <stdlib.h>
-#include <string.h>
-#include <sys/socket.h>
+#include <stdlib.h> #include <string.h> #include <sys/socket.h>
 #include <sys/types.h>
 #include <thread>
 #include <unistd.h>
@@ -92,16 +88,6 @@ void webserve::handle_client(int client_fd) {
   close(client_fd);
 }
 
-// void webserve::render_response(int code, std::string page, recv_cb_t *cb) {
-//   std::string response =
-//       std::format("HTTP/1.1 {}\r\nContent-Type: {}\r\n{}\r\n\r\n",
-//       cb->protocal,
-//                   response_map[code], cb->headers["Content-Type"], page);
-
-//   std::cout << "response: " <<  response << std::endl;
-
-//   send(cb->client_fd, response.c_str(), response.length(), 0);
-// }
 
 void webserve::listen_loop() {
   struct sockaddr_in addr;
