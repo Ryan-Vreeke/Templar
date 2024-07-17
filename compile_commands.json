@@ -1,8 +1,9 @@
 [
   {
-    "directory": "/home/ryan/source/template++",
+    "directory": "/home/ryan/source/Templar",
     "arguments": [
       "g++",
+      "-std=c++20",
       "-I./includes"
     ],
     "file": "main.cpp"

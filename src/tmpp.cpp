@@ -15,8 +15,7 @@ tmpp::tmpp(std::string html_path) : public_dir(html_path) {
 
 tmpp::~tmpp() {}
 
-void tmpp::listFiles(const fs::path &dirPath,
-                     std::vector<std::string> &filePaths) {
+void tmpp::listFiles(const fs::path &dirPath, std::vector<std::string> &filePaths) {
   for (const auto &entry : fs::directory_iterator(dirPath)) {
     if (entry.is_regular_file() && entry.path().extension() == ".html") {
       filePaths.push_back(entry.path().string());

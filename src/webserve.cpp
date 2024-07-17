@@ -2,6 +2,8 @@
 #include <asm-generic/socket.h>
 #include <cstdio>
 #include <cstring>
+#include <format>
+#include <iostream>
 #include <netinet/in.h>
 #include <stdlib.h>
 #include <string.h>
@@ -12,7 +14,7 @@
 
 #define SA struct sockaddr
 
-webserve::webserve(std::function<void(recv_cb_t)> cb, int port) : port(port), recv_cb(cb) {
+webserve::webserve(std::string pages, int port) : port(port), pages(pages) {
   int conn_fd;
   struct sockaddr_in addr, cli;
   int opt = 1;
@@ -37,19 +39,21 @@ webserve::webserve(std::function<void(recv_cb_t)> cb, int port) : port(port), re
 webserve::~webserve() { close(server_socket); }
 
 void webserve::start() {
+  running = true;
   std::thread listen_thread([this]() { listen_loop(); });
 
   listen_thread.join();
 }
-  
-std::vector<std::string> webserve::split_string(std::string str, std::string delim){
+
+std::vector<std::string> webserve::split_string(std::string str, const std::string &delim) {
   std::vector<std::string> tokens;
   std::string token;
+
   size_t pos = 0;
   size_t start = 0;
 
-  while((pos = str.find(start)) != std::string::npos){
-    token = str.substr(start, pos);
+  while ((pos = str.find(delim, start)) != std::string::npos) {
+    token = str.substr(start, pos - start);
 
     start = pos + delim.length();
     tokens.push_back(token);
@@ -58,48 +62,46 @@ std::vector<std::string> webserve::split_string(std::string str, std::string del
   return tokens;
 }
 
-bool webserve::contains(std::string str, std::string token){
+bool webserve::contains(std::string str, std::string token) {
   return str.find(token) != std::string::npos;
 }
 
 void webserve::handle_client(int client_fd) {
-  char buffer[1024] = {0};
-  int valread = read(client_fd, buffer, 1024);
-  printf("%s\n", buffer);
+  char request[1024] = {0};
+  int valread = read(client_fd, request, 1024);
 
-  recv_cb_t cb;
-  cb.client_fd = client_fd;
+  WebContext context{pages};
+  context.client_fd = client_fd;
 
-  std::vector<std::string> req_tokens = split_string(buffer, "\r\n");
-  for(auto t : req_tokens){
-    if(contains(t, "HTTP/"))//this is the request line
-    {
-      std::vector<std::string> split_line = split_string(t, " ");
+  std::vector<std::string> lines = split_string(request, "\r\n");
+  std::vector<std::string> request_line = split_string(lines[0], " ");
 
-      cb.type = split_line[0];
-      cb.path = split_line[1];
-      cb.protocal = split_line[2];
-    }else{
-      cb.headers.push_back(t);//ERROR: probably needs to be a map
-    }
+  for(int i = 1; i<lines.size(); i++){
+    std::vector<std::string> header_line = split_string(lines[i], ":");
+    context.headers[header_line[0]] = header_line[1];
   }
-
-  recv_cb(cb);
-
+  
+  std::string response;
+  if(request_line[0] == "GET"){
+    response = get_map[request_line[1]](context);
+  }else if(request_line[0] == "POST"){
+    response = post_map[request_line[1]](context);
+  }
+  
+  send(client_fd, response.c_str(), response.length(), 0);
   close(client_fd);
 }
 
+// void webserve::render_response(int code, std::string page, recv_cb_t *cb) {
+//   std::string response =
+//       std::format("HTTP/1.1 {}\r\nContent-Type: {}\r\n{}\r\n\r\n",
+//       cb->protocal,
+//                   response_map[code], cb->headers["Content-Type"], page);
 
-void webserve::send_page(std::string response){
-  std::string headers = "HTTP/1.1 200 OK\r\nContent-Type: text/html; charset=UTF-8\r\n";
-  response += "\r\n";
-  response += html;
-  response += "\r\n\r\n";
+//   std::cout << "response: " <<  response << std::endl;
 
-  std::cout << response << std::endl;
-
-  send(cb.client_fd, response.c_str(), response.length(), 0);
-}
+//   send(cb->client_fd, response.c_str(), response.length(), 0);
+// }
 
 void webserve::listen_loop() {
   struct sockaddr_in addr;
@@ -110,9 +112,18 @@ void webserve::listen_loop() {
   }
 
   while (running) {
+    printf("waiting");
     int conn_fd = accept(server_socket, (SA *)&addr, (socklen_t *)&addrlen);
 
     std::thread client_thread([this, conn_fd]() { handle_client(conn_fd); });
     client_thread.detach();
   }
+}
+
+void webserve::GET(std::string path, std::function<std::string(WebContext)> cb) {
+  get_map[path] = cb;
+}
+
+void webserve::POST(std::string path, std::function<std::string(WebContext)> cb) {
+  post_map[path] = cb;
 }

@@ -1,28 +1,26 @@
 #include "tmpp.h"
 #include "webserve.h"
+#include <csignal>
 #include <cstdio>
 #include <cstring>
-#include <string>
 #include <stdlib.h>
+#include <string>
 #include <sys/socket.h>
 
-tmpp tm{"./public"};
 
-void request_recv(recv_cb_t cb) {
-  std::string html = tm.prep_html("./public/index.html");
-  printf("\npath: %s\n", cb.path.c_str());
+webserve *web = new webserve{8000};
 
+void signalHandler(int signal) {
+  if (signal == SIGINT) {
+    std::cout << "Closing Server" << std::endl;
+
+    delete web;
+  }
 }
 
 int main(int argc, char *argv[]) {
+  std::signal(SIGINT, signalHandler);
 
-  // for (const auto &pair : tm.block_contents) {
-  //   // std::cout << "Key: " << pair.first << ", Value: " << pair.second <<
-  //   // std::endl;
-  // }
-
-  webserve web{&request_recv, 8080};
-
-  web.start();
+  web->start();
   return 0;
 }

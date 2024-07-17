@@ -1,14 +1,13 @@
 #pragma once
 
 #include <functional>
+#include "WebContext.h"
 #include <map>
-#include "recv_cb_t.h"
-
 
 class webserve {
 
 public:
-  webserve(std::function<void(recv_cb_t)> cb, int port = 3000);
+  webserve(std::string pages,int port = 3000);
   webserve(webserve &&) = default;
   webserve(const webserve &) = default;
   webserve &operator=(webserve &&) = default;
@@ -16,17 +15,20 @@ public:
   ~webserve();
 
   void start();
-  void send_page(std::string response);
+  void GET(std::string path, std::function<std::string(WebContext)> cb);
+  void POST(std::string path, std::function<std::string(WebContext)> cb);
 
 private:
-  std::function<void(recv_cb_t)> recv_cb;
   int port;
   int server_socket;
   bool running;
-  std::map<int, struct sockaddr_in *> client_map;
+  std::string pages;
+  std::map<std::string, std::function<std::string(WebContext)>> get_map;
+  std::map<std::string, std::function<std::string(WebContext)>> post_map;
 
   void listen_loop();
   void handle_client(int client_fd);
-  std::vector<std::string> split_string(std::string str, std::string delim);
+  std::vector<std::string> split_string(std::string str, const std::string& delim);
   bool contains(std::string str, std::string token);
+
 };
