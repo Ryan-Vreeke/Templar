@@ -23,13 +23,11 @@ public:
   std::string load_file(std::string name);
 
 private:
-  int find_next_end(std::string str);
   /*Returns false if failed to find def*/
   bool remove_def(std::string *str);
   bool insert_block(std::string *html, std::string block);
 
   std::vector<std::string> block_headers(std::string html);
-  std::vector<std::string> block_defs(std::string html);
   std::string def_content(std::string def, std::string html);
 
   void listFiles(const std::filesystem::path &dirPath, std::vector<std::string> &filePaths);
