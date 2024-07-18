@@ -20,6 +20,7 @@ public:
   std::map<std::string, std::string> block_contents;
 
   std::string prep_html(std::string path);
+  std::string load_file(std::string name);
 
 private:
   int find_next_end(std::string str);
@@ -30,7 +31,6 @@ private:
   std::vector<std::string> block_headers(std::string html);
   std::vector<std::string> block_defs(std::string html);
   std::string def_content(std::string def, std::string html);
-  std::string load_file(std::string name);
 
   void listFiles(const std::filesystem::path &dirPath, std::vector<std::string> &filePaths);
   /*Fill map with blocks defs as keys and content as values*/
