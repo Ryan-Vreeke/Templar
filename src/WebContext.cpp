@@ -6,13 +6,14 @@ WebContext::WebContext(std::string pages_path) : templ(pages_path) {}
 
 WebContext::~WebContext() {}
 
-template <typename T>
-std::string WebContext::Render(int code, std::string page, T data) {
-  std::string response = std::format("HTTP/1.1 {}\r\nContent-Type: {}\r\n{}\r\n\r\n",
-                                     response_map[code], 
-                                     headers["Accept"], 
-                                     page);
+std::string WebContext::Render(int code, std::string page) {
 
+  std::string html = templ.block_contents[page];
+  templ.prep_html(html);
+
+  std::string response =
+      std::format("HTTP/1.1 {}\r\nContent-Type: {}\r\n{}\r\n\r\n",
+                  response_map[code], headers["Accept"], html);
 
   return response;
 }

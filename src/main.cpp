@@ -21,7 +21,8 @@
 int main(int argc, char *argv[]) {
   // std::signal(SIGINT, signalHandler);
   
-  tmpp t{"./public/"};
+  WebContext wc{"./public/"};
+  std::cout<< wc.Render(200, "index") << std::endl;
 
   // web->start();
   return 0;

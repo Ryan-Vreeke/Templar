@@ -15,7 +15,7 @@ public:
   WebContext &operator=(const WebContext &) = default;
   ~WebContext();
 
-  template<typename T> std::string Render(int code, std::string page, T data);
+std::string Render(int code, std::string page);
 
 private:
   tmpp templ;
