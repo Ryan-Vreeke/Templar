@@ -3,9 +3,6 @@
 #include <csignal>
 #include <cstdio>
 #include <cstring>
-#include <ostream>
-#include <queue>
-#include <regex>
 #include <stdlib.h>
 #include <string>
 #include <sys/socket.h>

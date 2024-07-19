@@ -1,3 +1,4 @@
+{{def block "index" .}}
 <!doctype html>
 <html lang="en">
   <head>
@@ -7,13 +8,14 @@
     <link href="css/style.css" rel="stylesheet" />
   </head>
   <body>
-    {{ def block "index" .}}
+    {{ def block "hello" .}}
     <h1>Hello</h1>
     {{end}}
 
     {{block "swap" .}}
   </body>
 </html>
+{{end}}
 
 {{ def block "swap" . }}
 <h5>new hello</h5>
