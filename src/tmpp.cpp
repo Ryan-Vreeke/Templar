@@ -18,8 +18,27 @@ tmpp::tmpp(std::string html_path) : public_dir(html_path) {
 
 tmpp::~tmpp() {}
 
-void tmpp::listFiles(const fs::path &dirPath,
-                     std::vector<std::string> &filePaths) {
+void tmpp::prep_html(std::string &html){
+  std::queue defs = definitions(html);
+  std::queue ends = find_end_pos(html);
+
+  while(defs.front() != INT_MAX){
+    int start = defs.front();
+    int end = ends.front();
+
+    int bloc = html.find("}}", end) + 2;
+    html.erase(start, bloc - start);
+
+    defs.pop();
+    ends.pop();
+  }
+
+  replace_headers(&html);
+
+}
+
+void tmpp::listFiles(const fs::path &dirPath, std::vector<std::string> &filePaths) {
+
   for (const auto &entry : fs::directory_iterator(dirPath)) {
     if (entry.is_regular_file() && entry.path().extension() == ".html") {
       filePaths.push_back(entry.path().string());
@@ -59,16 +78,6 @@ std::vector<std::string> tmpp::block_headers(std::string html) {
   return headers;
 }
 
-bool tmpp::remove_def(std::string *str) {
-  int found = str->find("def");
-  if (found == std::string::npos)
-    return false;
-
-  str->erase(found, 3);
-  str->erase(remove(str->begin(), str->end(), ' '), str->end());
-  return true;
-}
-
 std::string tmpp::block_key(std::string str) {
   int found = str.find("\"");
   if (found == std::string::npos)
@@ -78,7 +87,7 @@ std::string tmpp::block_key(std::string str) {
   return str.substr(found + 1, end - found - 1);
 }
 
-std::queue<int> definitions(std::string text) {
+std::queue<int> tmpp::definitions(std::string text) {
   std::queue<int> pos;
   std::regex pattern("\\{\\{\\s*def\\s*block\\s*\"([^\"]*)\"\\s*\\.\\s*\\}\\}");
 
@@ -97,7 +106,7 @@ std::queue<int> definitions(std::string text) {
   return pos;
 }
 
-std::queue<int> find_end_pos(std::string text) {
+std::queue<int> tmpp::find_end_pos(std::string text) {
   std::queue<int> pos;
   std::regex pattern("\\{\\{\\s*end\\s*\\}\\}");
 
