@@ -1,6 +1,6 @@
 [
   {
-    "directory": "/home/ryan/source/Templar",
+    "directory": "/home/work/source/Templar",
     "arguments": [
       "g++",
       "-std=c++20",

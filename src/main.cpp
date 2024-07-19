@@ -7,20 +7,22 @@
 #include <string>
 #include <sys/socket.h>
 
+// webserve *web = new webserve{"./public/", 8000};
 
-webserve *web = new webserve{8000};
+// void signalHandler(int signal) {
+//   if (signal == SIGINT) {
+//     std::cout << "Closing Server" << std::endl;
 
-void signalHandler(int signal) {
-  if (signal == SIGINT) {
-    std::cout << "Closing Server" << std::endl;
+//     delete web;
+//   }
+// }
 
-    delete web;
-  }
-}
 
 int main(int argc, char *argv[]) {
-  std::signal(SIGINT, signalHandler);
+  // std::signal(SIGINT, signalHandler);
+  
+  tmpp t{"./public/"};
 
-  web->start();
+  // web->start();
   return 0;
 }
