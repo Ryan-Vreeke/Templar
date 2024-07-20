@@ -3,8 +3,8 @@
 #include <cstdio>
 #include <cstring>
 #include <netinet/in.h>
-#include <stdlib.h> 
-#include <string.h> 
+#include <stdlib.h>
+#include <string.h>
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <thread>
@@ -43,7 +43,8 @@ void webserve::start() {
   listen_thread.join();
 }
 
-std::vector<std::string> webserve::split_string(std::string str, const std::string &delim) {
+std::vector<std::string> webserve::split_string(std::string str,
+                                                const std::string &delim) {
   std::vector<std::string> tokens;
   std::string token;
 
@@ -74,22 +75,31 @@ void webserve::handle_client(int client_fd) {
   std::vector<std::string> lines = split_string(request, "\r\n");
   std::vector<std::string> request_line = split_string(lines[0], " ");
 
-  for(int i = 1; i<lines.size(); i++){
-    std::vector<std::string> header_line = split_string(lines[i], ":");
-    context.headers[header_line[0]] = header_line[1];
-  }
-  
+  // for (auto line : lines) {
+  //   std::vector<std::string> header_line = split_string(line, ":");
+  //   if (header_line.size() < 2) {
+  //     continue;
+  //   }
+  //   context.headers[header_line[0]] = header_line[1];
+  // }
+
   std::string response;
-  if(request_line[0] == "GET"){
+  std::cout << request_line[1] << std::endl;
+  if(!get_map.contains(request_line[1]) || !post_map.contains(request_line[1])){
+    // send(client_fd, "404 Not Found\r\n", 13, 0);
+    // close(client_fd);
+    return;
+  }
+
+  if (request_line[0] == "GET") {
     response = get_map[request_line[1]](context);
-  }else if(request_line[0] == "POST"){
+  } else if (request_line[0] == "POST") {
     response = post_map[request_line[1]](context);
   }
-  
+
   send(client_fd, response.c_str(), response.length(), 0);
   close(client_fd);
 }
-
 
 void webserve::listen_loop() {
   struct sockaddr_in addr;
@@ -100,7 +110,6 @@ void webserve::listen_loop() {
   }
 
   while (running) {
-    printf("waiting");
     int conn_fd = accept(server_socket, (SA *)&addr, (socklen_t *)&addrlen);
 
     std::thread client_thread([this, conn_fd]() { handle_client(conn_fd); });
@@ -108,10 +117,12 @@ void webserve::listen_loop() {
   }
 }
 
-void webserve::GET(std::string path, std::function<std::string(WebContext)> cb) {
+void webserve::GET(std::string path,
+                   std::function<std::string(WebContext)> cb) {
   get_map[path] = cb;
 }
 
-void webserve::POST(std::string path, std::function<std::string(WebContext)> cb) {
+void webserve::POST(std::string path,
+                    std::function<std::string(WebContext)> cb) {
   post_map[path] = cb;
 }

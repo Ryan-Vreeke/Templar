@@ -7,23 +7,25 @@
 #include <string>
 #include <sys/socket.h>
 
-// webserve *web = new webserve{"./public/", 8000};
+webserve *web = new webserve{"./public/", 8000};
 
-// void signalHandler(int signal) {
-//   if (signal == SIGINT) {
-//     std::cout << "Closing Server" << std::endl;
+void signalHandler(int signal) {
+  if (signal == SIGINT) {
+    std::cout << "Closing Server" << std::endl;
 
-//     delete web;
-//   }
-// }
-
+    delete web;
+  }
+}
 
 int main(int argc, char *argv[]) {
-  // std::signal(SIGINT, signalHandler);
-  
-  WebContext wc{"./public/"};
-  std::cout<< wc.Render(200, "index") << std::endl;
+  std::signal(SIGINT, signalHandler);
 
-  // web->start();
+  WebContext wc{"./public/"};
+
+  web->GET("/", [](WebContext ctx) -> std::string {
+    return ctx.Render(200, "index");
+  });
+
+  web->start();
   return 0;
 }

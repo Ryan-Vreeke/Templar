@@ -16,7 +16,7 @@ void clean_page(std::string &html) {
                          [](char a, char b) { return (a == ' ' && b == ' '); }),
              html.end());
 }
-
+ 
 std::string WebContext::Render(int code, std::string page) {
 
   std::string html = templ.block_contents[page];
@@ -25,7 +25,7 @@ std::string WebContext::Render(int code, std::string page) {
 
   std::string response =
       std::format("HTTP/1.1 {}\r\nContent-Type: {}\r\n{}\r\n\r\n",
-                  response_map[code], headers["Accept"], html);
+                  response_map[code], "text/html; charset=utf-8", html);
 
   return response;
 }
