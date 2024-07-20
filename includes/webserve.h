@@ -15,6 +15,7 @@ public:
   ~webserve();
 
   void start();
+  void stop();
   void GET(std::string path, std::function<std::string(WebContext)> cb);
   void POST(std::string path, std::function<std::string(WebContext)> cb);
 
@@ -30,5 +31,6 @@ private:
   void handle_client(int client_fd);
   std::vector<std::string> split_string(std::string str, const std::string& delim);
   bool contains(std::string str, std::string token);
+  void add_headers(std::map<std::string, std::string> &headers, std::vector<std::string> lines);
 
 };

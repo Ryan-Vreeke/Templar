@@ -2,6 +2,7 @@
 #include <asm-generic/socket.h>
 #include <cstdio>
 #include <cstring>
+#include <format>
 #include <netinet/in.h>
 #include <stdlib.h>
 #include <string.h>
@@ -65,7 +66,21 @@ bool webserve::contains(std::string str, std::string token) {
   return str.find(token) != std::string::npos;
 }
 
+void webserve::stop() { running = false; }
+
+// TODO: this doesn't get all headers
+void webserve::add_headers(std::map<std::string, std::string> &headers, std::vector<std::string> lines) {
+  for (int i = 1; i < lines.size(); i++) {
+    std::vector<std::string> header_line = split_string(lines[i], ":");
+    if (header_line.size() < 2) {
+      continue;
+    }
+    headers[header_line[0]] = header_line[1];
+  }
+}
+
 void webserve::handle_client(int client_fd) {
+  std::string response;
   char request[1024] = {0};
   int valread = read(client_fd, request, 1024);
 
@@ -75,19 +90,15 @@ void webserve::handle_client(int client_fd) {
   std::vector<std::string> lines = split_string(request, "\r\n");
   std::vector<std::string> request_line = split_string(lines[0], " ");
 
-  // for (auto line : lines) {
-  //   std::vector<std::string> header_line = split_string(line, ":");
-  //   if (header_line.size() < 2) {
-  //     continue;
-  //   }
-  //   context.headers[header_line[0]] = header_line[1];
-  // }
+  add_headers(context.headers, lines);
 
-  std::string response;
-  std::cout << request_line[1] << std::endl;
-  if(!get_map.contains(request_line[1]) || !post_map.contains(request_line[1])){
-    // send(client_fd, "404 Not Found\r\n", 13, 0);
-    // close(client_fd);
+  if (!get_map.contains(request_line[1]) && !post_map.contains(request_line[1])) {
+    response = std::format("HTTP/1.1 {}\r\nContent-Type: {}\r\n{}\r\n\r\n",
+                           "404 Not Found\r\n", "text/html; charset=utf-8",
+                           "PAGE NOT FOUND");
+
+    send(client_fd, response.c_str(), response.length(), 0);
+    close(client_fd);
     return;
   }
 

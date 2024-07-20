@@ -12,6 +12,7 @@ class tmpp {
 public:
   std::string public_dir;
   std::map<std::string, std::string> block_contents;
+  std::map<std::string, std::string> media_contents;
 
   tmpp(std::string html_dir);
   tmpp(tmpp &&) = default;

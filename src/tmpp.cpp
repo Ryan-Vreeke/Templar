@@ -17,11 +17,11 @@ tmpp::tmpp(std::string html_path) : public_dir(html_path) {
 
 tmpp::~tmpp() {}
 
-void tmpp::prep_html(std::string &html){
+void tmpp::prep_html(std::string &html) {
   std::queue defs = definitions(html);
   std::queue ends = find_end_pos(html);
 
-  while(defs.front() != INT_MAX){
+  while (defs.front() != INT_MAX) {
     int start = defs.front();
     int end = ends.front();
 
@@ -33,7 +33,6 @@ void tmpp::prep_html(std::string &html){
   }
 
   replace_headers(&html);
-
 }
 
 void tmpp::listFiles(const fs::path &dirPath, std::vector<std::string> &filePaths) {
@@ -43,6 +42,8 @@ void tmpp::listFiles(const fs::path &dirPath, std::vector<std::string> &filePath
       filePaths.push_back(entry.path().string());
     } else if (entry.is_directory()) {
       listFiles(entry.path(), filePaths); // Recursively search directories
+    } else {
+      media_contents[entry.path().filename()] = load_file(entry.path());
     }
   }
 }

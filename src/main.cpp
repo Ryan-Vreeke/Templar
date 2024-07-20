@@ -12,6 +12,7 @@ webserve *web = new webserve{"./public/", 8000};
 void signalHandler(int signal) {
   if (signal == SIGINT) {
     std::cout << "Closing Server" << std::endl;
+    web->stop();
 
     delete web;
   }
