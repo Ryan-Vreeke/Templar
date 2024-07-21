@@ -36,8 +36,7 @@ class tmpp
 	/*Fill map with blocks defs as keys and content as values*/
 	void fill_map(std::vector<std::string> &filePaths);
 	void replace_headers(std::string *html);
-	void listFiles(const std::filesystem::path &dirPath,
-								 std::vector<std::string> &filePaths);
+	void listFiles(const std::filesystem::path &dirPath, std::vector<std::string> &filePaths);
 
 	std::string block_key(std::string str);
 };
