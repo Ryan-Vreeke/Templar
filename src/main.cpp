@@ -1,32 +1,39 @@
-#include "tmpp.h"
-#include "webserve.h"
+#include <stdlib.h>
+#include <sys/socket.h>
+
 #include <csignal>
 #include <cstdio>
 #include <cstring>
-#include <stdlib.h>
 #include <string>
-#include <sys/socket.h>
 
-webserve *web = new webserve{"./public/", 8000};
+#include "webserve.h"
 
-void signalHandler(int signal) {
-  if (signal == SIGINT) {
-    std::cout << "Closing Server" << std::endl;
-    web->stop();
+webserve *web;
 
-    delete web;
-  }
+void signalHandler(int signal)
+{
+	if (signal == SIGINT)
+	{
+		std::cout << "Closing Server" << std::endl;
+		web->stop();
+
+		delete web;
+	}
 }
 
-int main(int argc, char *argv[]) {
-  std::signal(SIGINT, signalHandler);
+int main(int argc, char *argv[])
+{
+	std::signal(SIGINT, signalHandler);
+	int port;
+	std::cin >> port;
 
-  WebContext wc{"./public/"};
+	std::cout << "Port: " << port << std::endl;
+	web = new webserve{"./public", port};
 
-  web->GET("/", [](WebContext ctx) -> std::string {
-    return ctx.Render(200, "index");
+	web->GET("/", [](WebContext ctx) -> std::string	{ 
+    return ctx.Render(200, "index"); 
   });
 
-  web->start();
-  return 0;
+	web->start();
+	return 0;
 }
