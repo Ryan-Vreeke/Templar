@@ -1,6 +1,8 @@
 #include "Watchman.h"
 
+#include <iostream>
 #include <thread>
+#include <vector>
 
 Watchman::Watchman(const std::string &directory) : _directory(directory) {}
 
@@ -32,6 +34,7 @@ int Watchman::init_watchman()
 void Watchman::run_watchman(watchman_cb *cb)
 {
 	std::vector<char> buffer( (size_t)(10 * (sizeof(struct inotify_event) + NAME_MAX + 1)));
+
 	while (watch)
 	{
 		ssize_t length = read(inotifyFd, buffer.data(), buffer.size());
@@ -62,11 +65,11 @@ void Watchman::run_watchman(watchman_cb *cb)
 				}
 				else if (event->mask & IN_MOVED_TO)
 				{
-					cb->move_in_cb(event->name);
+					cb->moved_cb(event->name, true);
 				}
 				else if (event->mask & IN_MOVED_FROM)
 				{
-					cb->move_out_cb(event->name);
+					cb->moved_cb(event->name, false);
 				}
 			}
 			i += sizeof(struct inotify_event) + event->len;
@@ -79,10 +82,7 @@ void Watchman::run_watchman(watchman_cb *cb)
 void Watchman::start_watch(watchman_cb *cb)
 {
 	std::thread watchman_thread([this, cb]() { run_watchman(cb); });
-  watchman_thread.detach();
+	watchman_thread.detach();
 }
 
-void Watchman::stop(){
-  watch = false;
-}
-
+void Watchman::stop() { watch = false; }

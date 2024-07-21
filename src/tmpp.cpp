@@ -5,7 +5,9 @@
 #include <cstddef>
 #include <cstdio>
 #include <filesystem>
+#include <queue>
 #include <regex>
+#include <string>
 #include <vector>
 
 namespace fs = std::filesystem;
@@ -92,15 +94,6 @@ std::vector<std::string> tmpp::block_headers(std::string html)
 	return headers;
 }
 
-std::string tmpp::block_key(std::string str)
-{
-	int found = str.find("\"");
-	if (found == std::string::npos) return NULL;
-
-	int end = str.find("\"", found + 1);
-	return str.substr(found + 1, end - found - 1);
-}
-
 std::queue<int> tmpp::definitions(std::string text)
 {
 	std::queue<int> pos;
@@ -146,44 +139,7 @@ void tmpp::fill_map(std::vector<std::string> &filePaths)
 {
 	for (auto file : filePaths)
 	{
-		std::string html = load_file(file);
-
-		std::queue<int> def_positions = definitions(html);
-		std::queue<int> end_positions = find_end_pos(html);
-		std::stack<int> def_stack;
-
-		def_stack.push(def_positions.front());
-		def_positions.pop();
-
-		while (!def_stack.empty() || !def_positions.empty())
-		{
-			int d = def_positions.front();
-			int e = end_positions.front();
-
-			if (d < e)
-			{
-				def_stack.push(def_positions.front());
-				def_positions.pop();
-			}
-			else if (d > e)
-			{
-				int start = def_stack.top();
-				int end = end_positions.front();
-				int len = html.find("}}", start) + 2;
-
-				std::string key = block_key(html.substr(start, len));
-				std::string content = html.substr(len, end - len);
-
-				block_contents[key] = content;
-
-				def_stack.pop();
-				end_positions.pop();
-			}
-			else
-			{
-				break;
-			}
-		}
+		add_file(file);
 	}
 }
 
@@ -204,10 +160,62 @@ bool tmpp::insert_block(std::string *html, std::string block)
 
 	while (found != std::string::npos)
 	{
-		// block.erase(remove(block.begin(), block.end(), ' '), block.end());
 		html->replace(found, block.length(), block_contents[block_key(block)]);
 		found = html->find(block, found + 1);
 	}
 
 	return true;
 }
+
+std::string tmpp::block_key(std::string str)
+{
+	int found = str.find("\"");
+	if (found == std::string::npos) return NULL;
+
+	int end = str.find("\"", found + 1);
+	return str.substr(found + 1, end - found - 1);
+}
+
+void tmpp::add_file(const std::string &file)
+{
+	std::string html = load_file(file);
+	std::queue<int> def_positions = definitions(html);
+	std::queue<int> end_positions = find_end_pos(html);
+	std::stack<int> def_stack;
+
+	def_stack.push(def_positions.front());
+	def_positions.pop();
+
+	while (!def_stack.empty() || !def_positions.empty())
+	{
+		int d = def_positions.front();
+		int e = end_positions.front();
+
+		if (d < e)
+		{
+			def_stack.push(def_positions.front());
+			def_positions.pop();
+		}
+		else if (d > e)
+		{
+			int start = def_stack.top();
+			int end = end_positions.front();
+			int len = html.find("}}", start) + 2;
+
+			std::string key = block_key(html.substr(start, len));
+			std::string content = html.substr(len, end - len);
+
+			block_contents[key] = content;
+
+			def_stack.pop();
+			end_positions.pop();
+		}
+		else
+		{
+			break;
+		}
+	}
+}
+
+//TODO: Remove all defs from file that is contained in block_contents map
+void tmpp::remove_file(const std::string &file) {}

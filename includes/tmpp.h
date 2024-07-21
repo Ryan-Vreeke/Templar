@@ -24,6 +24,8 @@ class tmpp
 	void prep_html(std::string &html);
 	std::string load_file(std::string name);
   static bool isFile(std::string name);
+  void add_file(const std::string& file);
+  void remove_file(const std::string& file);
 
  private:
 	/*Returns false if failed to find def*/

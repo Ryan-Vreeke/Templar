@@ -9,26 +9,24 @@
 #include <csignal>
 #include <cstdio>
 #include <cstring>
-#include <iostream>
+#include <functional>
 #include <string>
-#include <vector>
 
-typedef void (*callback)(const std::string &);
+typedef std::function<void(const std::string &str)> callback;
+typedef std::function<void(const std::string &str, bool)> moveCallback;
 
 typedef struct
 {
 	callback modify_cb;
 	callback delete_cb;
 	callback created_cb;
-	callback move_in_cb;
-	callback move_out_cb;
+	moveCallback moved_cb;
 } watchman_cb;
 
 class Watchman
 {
  public:
-
-  bool watch = true;
+	bool watch = true;
 
 	Watchman(const std::string &directory);
 	Watchman(Watchman &&) = default;
@@ -39,13 +37,11 @@ class Watchman
 
 	int init_watchman();
 	void start_watch(watchman_cb *cb);
-  void stop();
+	void stop();
 
  private:
 	const std::string &_directory;
 	int inotifyFd;
 
-  void run_watchman(watchman_cb *cb);
-
+	void run_watchman(watchman_cb *cb);
 };
-

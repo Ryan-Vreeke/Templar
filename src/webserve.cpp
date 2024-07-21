@@ -13,12 +13,13 @@
 #include <format>
 #include <thread>
 
+#include "Watchman.h"
 #include "WebContext.h"
 
 #define SA struct sockaddr
 
 webserve::webserve(std::string pages, int port)
-		: port(port), pages(pages), templ(pages)
+		: port(port), pages(pages), templ(pages), file_watcher(pages)
 {
 	int conn_fd;
 	struct sockaddr_in addr, cli;
@@ -27,9 +28,7 @@ webserve::webserve(std::string pages, int port)
 
 	// socket create
 	if ((server_socket = socket(AF_INET, SOCK_STREAM, 0)) == 0)
-	{
 		perror("socket failed");
-	}
 
 	addr.sin_family = AF_INET;
 	addr.sin_addr.s_addr = INADDR_ANY;
@@ -37,19 +36,30 @@ webserve::webserve(std::string pages, int port)
 
 	// binding socket to given IP and verification
 	if ((bind(server_socket, (SA *)&addr, sizeof(addr))) != 0)
-	{
 		perror("socket bind failed...\n");
-	}
 	else
 		printf("Socket bind successful.... \n");
+
+	// making watchfolder
+	file_watcher.init_watchman();
+	file_watcher_cb->created_cb = [&](const std::string &str) { file_created(str); };
+	file_watcher_cb->moved_cb = [&](const std::string &str, bool in) { file_moved(str, in); };
+	file_watcher_cb->delete_cb = [&](const std::string &str) { file_deleted(str); };
+	file_watcher_cb->modify_cb = [&](const std::string &str) { file_modified(str); };
 }
 
-webserve::~webserve() { close(server_socket); }
+webserve::~webserve()
+{
+	close(server_socket);
+	file_watcher.stop();
+	delete file_watcher_cb;
+}
 
 void webserve::start()
 {
 	running = true;
-	std::thread listen_thread([this]() { listen_loop(); });
+	file_watcher.start_watch(file_watcher_cb);
+	std::thread listen_thread([&]() { listen_loop(); });
 
 	listen_thread.join();
 }
@@ -82,11 +92,10 @@ bool webserve::contains(std::string str, std::string token)
 	return str.find(token) != std::string::npos;
 }
 
+// FIX: doesn't stop thread correctly
 void webserve::stop() { running = false; }
 
-// TODO: this doesn't get all headers
-void webserve::add_headers(std::map<std::string, std::string> &headers,
-													 std::vector<std::string> lines)
+void webserve::add_headers(std::map<std::string, std::string> &headers, std::vector<std::string> lines)
 {
 	for (int i = 1; i < lines.size(); i++)
 	{
@@ -191,4 +200,35 @@ void webserve::GET(std::string path, std::function<std::string(WebContext)> cb)
 void webserve::POST(std::string path, std::function<std::string(WebContext)> cb)
 {
 	post_map[path] = cb;
+}
+
+void webserve::file_created(const std::string &str)
+{
+  templ.add_file(str);
+	std::cout << "File created: " << str << std::endl;
+}
+
+void webserve::file_deleted(const std::string &str)
+{
+  templ.remove_file(str);
+	std::cout << "File deleted: " << str << std::endl;
+}
+
+void webserve::file_modified(const std::string &str)
+{
+  templ.add_file(str);
+	std::cout << "File modified: " << str << std::endl;
+}
+
+void webserve::file_moved(const std::string &str, bool in)
+{
+	if (in)
+	{
+		std::cout << "File moved into directory: " << str << std::endl;
+    templ.add_file(str);
+		return;
+	}
+
+  templ.remove_file(str);
+	std::cout << "File moved out of directory: " << str << std::endl;
 }

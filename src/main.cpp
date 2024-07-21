@@ -27,27 +27,22 @@ void signalHandler(int signal)
 
 void created(const std::string& str)
 {
-	std::cout << "File created: " << str << std::endl;
 }
 
 void deleted_cb(const std::string& str)
 {
-	std::cout << "File deleted: " << str << std::endl;
 }
 
 void modifi(const std::string& str)
 {
-	std::cout << "File modified: " << str << std::endl;
 }
 
 void move_in(const std::string& str)
 {
-	std::cout << "File moved into directory: " << str << std::endl;
 }
 
 void move_out(const std::string& str)
 {
-	std::cout << "File moved out of directory: " << str << std::endl;
 }
 
 int main(int argc, char* argv[])
@@ -69,11 +64,11 @@ int main(int argc, char* argv[])
 	// std::cout << "Port: " << port << std::endl;
 	// web = new webserve{"./public", port};
 
-	// web->GET("/", [](WebContext ctx) -> std::string	{
-	//    return ctx.Render(200, "index");
-	//  });
+	web->GET("/", [](WebContext ctx) -> std::string	{
+	   return ctx.Render(200, "index");
+	 });
 
-	// web->start();
+	web->start();
 	//
 
 	return 0;
