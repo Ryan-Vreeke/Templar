@@ -1,14 +1,15 @@
-#include <stdlib.h>
+
 #include <sys/socket.h>
+#include <unistd.h>
 
 #include <csignal>
 #include <cstdio>
 #include <cstring>
-#include <string>
-
 #include "webserve.h"
 
 webserve *web;
+using namespace std;
+
 
 void signalHandler(int signal)
 {
@@ -23,17 +24,20 @@ void signalHandler(int signal)
 
 int main(int argc, char *argv[])
 {
-	std::signal(SIGINT, signalHandler);
-	int port;
-	std::cin >> port;
+	WatchDirectory("./public");
+	// std::signal(SIGINT, signalHandler);
+	// int port;
+	// std::cin >> port;
 
-	std::cout << "Port: " << port << std::endl;
-	web = new webserve{"./public", port};
+	// std::cout << "Port: " << port << std::endl;
+	// web = new webserve{"./public", port};
 
-	web->GET("/", [](WebContext ctx) -> std::string	{ 
-    return ctx.Render(200, "index"); 
-  });
+	// web->GET("/", [](WebContext ctx) -> std::string	{
+	//    return ctx.Render(200, "index");
+	//  });
 
-	web->start();
+	// web->start();
+	//
+
 	return 0;
 }
