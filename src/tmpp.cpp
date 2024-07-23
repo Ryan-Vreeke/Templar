@@ -176,6 +176,7 @@ std::string tmpp::block_key(std::string str)
 	return str.substr(found + 1, end - found - 1);
 }
 
+
 void tmpp::add_file(const std::string &file)
 {
 	std::string html = load_file(file);
@@ -217,5 +218,18 @@ void tmpp::add_file(const std::string &file)
 	}
 }
 
-//TODO: Remove all defs from file that is contained in block_contents map
-void tmpp::remove_file(const std::string &file) {}
+void tmpp::remove_file(const std::string &file) {
+	std::string html = load_file(file);
+	std::queue<int> def_positions = definitions(html);
+
+  while(def_positions.front() != INT_MAX){
+    int start = def_positions.front();
+    int len = html.find("}}", start) + 2;
+
+    std::string key = block_key(html.substr(start, len));
+
+    block_contents.erase(key);
+    def_positions.pop();
+  }
+
+}
