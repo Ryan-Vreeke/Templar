@@ -1,4 +1,5 @@
 #include "webserve.h"
+
 #include <asm-generic/socket.h>
 #include <netinet/in.h>
 #include <stdlib.h>
@@ -41,10 +42,17 @@ webserve::webserve(std::string pages, int port)
 
 	// making watchfolder
 	file_watcher.init_watchman();
-	file_watcher_cb->created_cb = [&](const std::string &str) { file_created(str); };
-	file_watcher_cb->moved_cb = [&](const std::string &str, bool in) { file_moved(str, in); };
-	file_watcher_cb->delete_cb = [&](const std::string &str) { file_deleted(str); };
-	file_watcher_cb->modify_cb = [&](const std::string &str) { file_modified(str); };
+	file_watcher_cb = new watchman_cb();
+
+	file_watcher_cb->created_cb = [&](const std::string &str)
+	{ file_created(str); };
+	file_watcher_cb->delete_cb = [&](const std::string &str)
+	{ file_deleted(str); };
+	file_watcher_cb->modify_cb = [&](const std::string &str)
+	{ file_modified(str); };
+
+	file_watcher_cb->moved_cb = [&](const std::string &str, bool in)
+	{ file_moved(str, in); };
 }
 
 webserve::~webserve()
@@ -94,7 +102,8 @@ bool webserve::contains(std::string str, std::string token)
 // FIX: doesn't stop thread correctly
 void webserve::stop() { running = false; }
 
-void webserve::add_headers(std::map<std::string, std::string> &headers, std::vector<std::string> lines)
+void webserve::add_headers(std::map<std::string, std::string> &headers,
+													 std::vector<std::string> lines)
 {
 	for (int i = 1; i < lines.size(); i++)
 	{
@@ -136,6 +145,7 @@ void webserve::handle_client(int client_fd)
 
 	std::vector<std::string> lines = split_string(request, "\r\n");
 	std::vector<std::string> request_line = split_string(lines[0], " ");
+	std::cout << request_line[1] << std::endl;
 
 	add_headers(context.headers, lines);
 
@@ -150,7 +160,7 @@ void webserve::handle_client(int client_fd)
 
 	if (!isPath(request_line[1]))
 	{
-		response = std::format("HTTP/1.1 {}\r\nContent-Type: {}\r\n\r\n{}\r\n",
+		response = std::format("HTTP/1.1 {}\r\nContent-Type:{}\r\n\r\n{}\r\n",
 													 "404 Not Found", context.headers["Accept"],
 													 "PAGE NOT FOUND");
 
@@ -167,6 +177,8 @@ void webserve::handle_client(int client_fd)
 	{
 		response = post_map[request_line[1]](context);
 	}
+
+	std::cout << response << std::endl;
 
 	send(client_fd, response.c_str(), response.length(), 0);
 	close(client_fd);
@@ -203,19 +215,19 @@ void webserve::POST(std::string path, std::function<std::string(WebContext)> cb)
 
 void webserve::file_created(const std::string &str)
 {
-  templ.add_file(str);
+	templ.add_file(str);
 	std::cout << "File created: " << str << std::endl;
 }
 
 void webserve::file_deleted(const std::string &str)
 {
-  templ.remove_file(str);
+	templ.remove_file(str);
 	std::cout << "File deleted: " << str << std::endl;
 }
 
 void webserve::file_modified(const std::string &str)
 {
-  templ.add_file(str);
+	templ.add_file(str);
 	std::cout << "File modified: " << str << std::endl;
 }
 
@@ -224,10 +236,10 @@ void webserve::file_moved(const std::string &str, bool in)
 	if (in)
 	{
 		std::cout << "File moved into directory: " << str << std::endl;
-    templ.add_file(str);
+		templ.add_file(str);
 		return;
 	}
 
-  templ.remove_file(str);
+	templ.remove_file(str);
 	std::cout << "File moved out of directory: " << str << std::endl;
 }

@@ -6,17 +6,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title></title>
     <link href="style.css" rel="stylesheet" />
+    <script
+      src="https://unpkg.com/htmx.org@2.0.1"
+      integrity="sha384-QWGpdj554B4ETpJJC9z+ZHJcA/i59TyjxEPXiiUgN2WmTyV5OEZWCD6gQhgkdpB/"
+      crossorigin="anonymous"
+    ></script>
   </head>
   <body>
-    {{ def block "hello" .}}
-    <h1>Hello</h1>
-    {{end}}
 
-    {{block "swap" .}}
+    <button
+      hx-post="/clicked"
+      hx-trigger="click"
+      hx-target="#parent-div"
+      hx-swap="outerHTML"
+    >
+      Click Me!
+    </button>
   </body>
 </html>
-{{end}}
-
-{{ def block "swap" . }}
-<h5>new hello</h5>
 {{end}}
