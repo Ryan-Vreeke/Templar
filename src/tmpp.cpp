@@ -205,6 +205,10 @@ void tmpp::add_file(const std::string &file)
 
 			std::string key = block_key(html.substr(start, len));
 			std::string content = html.substr(len, end - len);
+      
+      if(block_contents.contains(key)){
+        block_contents.erase(key);
+      }
 
 			block_contents[key] = content;
 

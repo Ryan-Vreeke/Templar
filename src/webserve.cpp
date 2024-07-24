@@ -215,31 +215,26 @@ void webserve::POST(std::string path, std::function<std::string(WebContext)> cb)
 
 void webserve::file_created(const std::string &str)
 {
-	templ.add_file(str);
-	std::cout << "File created: " << str << std::endl;
+	templ.add_file(templ.public_dir + "/" + str);
 }
 
 void webserve::file_deleted(const std::string &str)
 {
-	templ.remove_file(str);
-	std::cout << "File deleted: " << str << std::endl;
+	templ.remove_file(templ.public_dir + "/" + str);
 }
 
 void webserve::file_modified(const std::string &str)
 {
-	templ.add_file(str);
-	std::cout << "File modified: " << str << std::endl;
+	templ.add_file(templ.public_dir + "/" + str);
 }
 
 void webserve::file_moved(const std::string &str, bool in)
 {
 	if (in)
 	{
-		std::cout << "File moved into directory: " << str << std::endl;
-		templ.add_file(str);
+		templ.add_file(templ.public_dir + "/" + str);
 		return;
 	}
 
-	templ.remove_file(str);
-	std::cout << "File moved out of directory: " << str << std::endl;
+	templ.remove_file(templ.public_dir + "/" + str);
 }
