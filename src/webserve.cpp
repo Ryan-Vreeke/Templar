@@ -50,7 +50,6 @@ webserve::webserve(std::string pages, int port)
 	{ file_deleted(str); };
 	file_watcher_cb->modify_cb = [&](const std::string &str)
 	{ file_modified(str); };
-
 	file_watcher_cb->moved_cb = [&](const std::string &str, bool in)
 	{ file_moved(str, in); };
 }
@@ -130,8 +129,9 @@ std::string webserve::send_file(std::string path, WebContext context)
 		ret_code = "500 Internal Server Error";
 	}
 
-	return std::format("HTTP/1.1 {}\r\nContent-Type: {}\r\n\r\n{}\r\n", ret_code,
-										 context.headers["Accept"], page);
+	return std::format(
+			"HTTP/1.1 {}\r\nContent-Type:{}\r\nContent-Length:{}\r\n\r\n{}\r\n",
+			ret_code, context.headers["Accept"], page.length(), page);
 }
 
 void webserve::handle_client(int client_fd)
@@ -175,10 +175,9 @@ void webserve::handle_client(int client_fd)
 	}
 	else if (request_line[0] == "POST" && post_map.contains(request_line[1]))
 	{
+    context.body = lines[lines.size() - 1];
 		response = post_map[request_line[1]](context);
 	}
-
-	std::cout << response << std::endl;
 
 	send(client_fd, response.c_str(), response.length(), 0);
 	close(client_fd);

@@ -6,7 +6,7 @@
 #include <cstdio>
 #include <cstring>
 
-#include "Watchman.h"
+#include "WebContext.h"
 #include "webserve.h"
 
 webserve* web;
@@ -33,6 +33,11 @@ int main(int argc, char* argv[])
 	web->GET("/", [](WebContext ctx) -> std::string	{
 	   return ctx.Render(200, "index");
 	});
+
+  web->POST("/clicked", [](WebContext ctx) -> std::string{
+    cout << ctx.body << endl;
+    return ctx.Render(200, "click");
+  });
 
 	web->start();
 	return 0;

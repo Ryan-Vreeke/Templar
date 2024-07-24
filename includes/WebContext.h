@@ -8,6 +8,7 @@ class WebContext
 {
  public:
 	std::map<std::string, std::string> headers;
+  std::string body;
 	int client_fd;
 
 	WebContext(tmpp _templ);
