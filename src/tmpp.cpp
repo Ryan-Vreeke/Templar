@@ -180,9 +180,15 @@ std::string tmpp::block_key(std::string str)
 void tmpp::add_file(const std::string &file)
 {
 	std::string html = load_file(file);
+  if(html.empty())
+    return;
+  
 	std::queue<int> def_positions = definitions(html);
 	std::queue<int> end_positions = find_end_pos(html);
 	std::stack<int> def_stack;
+
+  if(def_positions.front() == INT_MAX || end_positions.front() == INT_MAX)
+    return;
 
 	def_stack.push(def_positions.front());
 	def_positions.pop();
@@ -205,7 +211,7 @@ void tmpp::add_file(const std::string &file)
 
 			std::string key = block_key(html.substr(start, len));
 			std::string content = html.substr(len, end - len);
-      
+
       if(block_contents.contains(key)){
         block_contents.erase(key);
       }

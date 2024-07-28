@@ -1,8 +1,9 @@
 {{def block "nav" .}}
 <nav>
-  <ul>
-    <li>Home</li>
-    <li>Public</li>
+  <ul class="nav-list">
+    <li class="nav-item" hx-post="/home" hx-trigger="click" hx-target="#content" hx-swap="innerHTML"><i class="fa-solid fa-user fa-lg"></i></li>
+    <li class="nav-item" hx-post="/projects" hx-trigger="click" hx-target="#content" hx-swap="innerHTML"><i class="fa-solid fa-diagram-project fa-lg"></i></li>
+    <li class="nav-item" hx-post="/work" hx-trigger="click" hx-target="#content" hx-swap="innerHTML"><i class="fa-solid fa-briefcase fa-lg"></i></li>
   </ul>
 </nav>
 {{end}}

@@ -34,9 +34,19 @@ int main(int argc, char* argv[])
 	   return ctx.Render(200, "index");
 	});
 
-  web->POST("/clicked", [](WebContext ctx) -> std::string{
+  web->POST("/home", [](WebContext ctx) -> std::string{
     cout << ctx.body << endl;
-    return ctx.Render(200, "click");
+    return ctx.Render(200, "home");
+  });
+
+  web->POST("/projects", [](WebContext ctx) -> std::string{
+    cout << ctx.body << endl;
+    return ctx.Render(200, "projects");
+  });
+
+  web->POST("/work", [](WebContext ctx) -> std::string{
+    cout << ctx.body << endl;
+    return ctx.Render(200, "work");
   });
 
 	web->start();

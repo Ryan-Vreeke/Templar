@@ -11,18 +11,44 @@
       integrity="sha384-QWGpdj554B4ETpJJC9z+ZHJcA/i59TyjxEPXiiUgN2WmTyV5OEZWCD6gQhgkdpB/"
       crossorigin="anonymous"
     ></script>
+    <script
+      src="https://kit.fontawesome.com/1507af4f07.js"
+      crossorigin="anonymous"
+    ></script>
   </head>
   <body>
-    <div id="parent-div">parent</div>
+    {{block "nav" .}}
 
-    <button
-      hx-post="/clicked"
-      hx-trigger="click"
-      hx-target="#parent-div"
-      hx-swap="outerHTML"
-    >
-      Click Me!
-    </button>
+    <div id="content">{{block "home" .}}</div>
   </body>
 </html>
+{{end}} 
+
+{{def block "home" .}}
+<div class="content_container">
+  <img src="home_background.jpg" id="home_background" />
+  <div class="content_header">
+    <div id="text">
+      <h2>Ryan Vreeke</h2>
+      <h4>Software Engineer</h4>
+      <p>
+        Hi, I'm Ryan Vreeke, a computer science student at the University of
+        Utah. I'm passionate about AI, computer graphics, computer vision, and
+        operating systems. I've interned at ESRI, working with WPF and .NET.
+        Check out my portfolio for a taste of my expertise.
+      </p>
+    </div>
+    <div id="picture">
+      <img src="home_background.jpg" />
+    </div>
+  </div>
+</div>
+{{end}} 
+
+{{def block "projects" .}}
+<h1>projects</h1>
+{{end}} 
+
+{{def block "work" .}}
+<h1>Experience</h1>
 {{end}}
