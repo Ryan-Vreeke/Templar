@@ -9,6 +9,7 @@
 #include <regex>
 #include <string>
 #include <vector>
+#include <format>
 
 namespace fs = std::filesystem;
 
@@ -41,6 +42,39 @@ void tmpp::remove_defs(std::string& html){
 	}
 }
 
+std::queue<int> tmpp::find_all_var(std::string html, std::string var){
+	std::queue<int> pos;
+	std::regex pattern(std::format("\\{{\\s*\\s*\\.{}\\s*\\}}", var));
+
+	auto words_begin = std::sregex_iterator(html.begin(), html.end(), pattern);
+	auto words_end = std::sregex_iterator();
+
+	for (std::sregex_iterator it = words_begin; it != words_end; ++it)
+	{
+		std::smatch match = *it;
+		std::ptrdiff_t position = match.position(0);	// position of the match in the string
+
+		pos.push(position);
+	}
+
+	pos.push(INT_MAX);
+	return pos;
+
+}
+
+void tmpp::replace_var(std::string& html, std::string var, std::string val){
+  std::queue<int> var_pos = find_all_var(html, var);
+
+  while(var_pos.front() != INT_MAX){
+    int end_var = html.find("}}", var_pos.front());
+
+    html.erase(var_pos.front(), end_var - var_pos.front());
+    html.insert(var_pos.front(), val);
+
+    var_pos.pop();
+  }
+}
+
 void tmpp::prep_html(std::string &html)
 {
   remove_defs(html);
@@ -49,8 +83,7 @@ void tmpp::prep_html(std::string &html)
 
 bool tmpp::isFile(std::string path) { return fs::exists(path); }
 
-void tmpp::listFiles(const fs::path &dirPath,
-										 std::vector<std::string> &filePaths)
+void tmpp::listFiles(const fs::path &dirPath, std::vector<std::string> &filePaths)
 {
 	for (const auto &entry : fs::directory_iterator(dirPath))
 	{

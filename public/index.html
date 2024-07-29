@@ -17,38 +17,9 @@
     ></script>
   </head>
   <body>
-    {{block "nav" .}}
 
-    <div id="content">{{block "home" .}}</div>
+    <h1>{{.Title}}</h1>
+
   </body>
 </html>
 {{end}} 
-
-{{def block "home" .}}
-<div class="content_container">
-  <img src="home_background.jpg" id="home_background" />
-  <div class="content_header">
-    <div id="text">
-      <h2>Ryan Vreeke</h2>
-      <h4>Software Engineer</h4>
-      <p>
-        Hi, I'm Ryan Vreeke, a computer science student at the University of
-        Utah. I'm passionate about AI, computer graphics, computer vision, and
-        operating systems. I've interned at ESRI, working with WPF and .NET.
-        Check out my portfolio for a taste of my expertise.
-      </p>
-    </div>
-    <div id="picture">
-      <img src="home_background.jpg" />
-    </div>
-  </div>
-</div>
-{{end}} 
-
-{{def block "projects" .}}
-<h1>projects</h1>
-{{end}} 
-
-{{def block "work" .}}
-<h1>Experience</h1>
-{{end}}
