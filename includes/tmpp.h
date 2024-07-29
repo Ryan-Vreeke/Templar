@@ -39,6 +39,7 @@ class tmpp
 	void fill_map(std::vector<std::string> &filePaths);
 	void replace_headers(std::string *html);
 	void listFiles(const std::filesystem::path &dirPath, std::vector<std::string> &filePaths);
+  void remove_defs(std::string& html);
 
 	std::string block_key(std::string str);
 };

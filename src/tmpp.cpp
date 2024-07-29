@@ -22,8 +22,9 @@ tmpp::tmpp(std::string html_path) : public_dir(html_path)
 
 tmpp::~tmpp() {}
 
-void tmpp::prep_html(std::string &html)
-{
+
+void tmpp::remove_defs(std::string& html){
+
 	std::queue defs = definitions(html);
 	std::queue ends = find_end_pos(html);
 
@@ -33,12 +34,16 @@ void tmpp::prep_html(std::string &html)
 		int end = ends.front();
 
 		int bloc = html.find("}}", end) + 2;
-		html.erase(start, bloc - start);
+    html.erase(start, bloc - start);
 
 		defs.pop();
 		ends.pop();
 	}
+}
 
+void tmpp::prep_html(std::string &html)
+{
+  remove_defs(html);
 	replace_headers(&html);
 }
 
