@@ -26,7 +26,7 @@ class tmpp
   static bool isFile(std::string name);
   void add_file(const std::string& file);
   void remove_file(const std::string& file);
-  void replace_var(std::string& html, std::string var, std::string val);
+  std::string replace_var(std::string html, std::string var, std::string val);
 
  private:
 	/*Returns false if failed to find def*/
@@ -35,7 +35,7 @@ class tmpp
 	std::queue<int> definitions(std::string text);
 
 	std::vector<std::string> block_headers(std::string html);
-  std::queue<int> find_all_var(std::string html, std::string var);
+  std::vector<int> find_all_var(std::string html, std::string var);
 
 	/*Fill map with blocks defs as keys and content as values*/
 	void fill_map(std::vector<std::string> &filePaths);

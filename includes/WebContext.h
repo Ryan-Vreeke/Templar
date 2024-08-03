@@ -1,5 +1,6 @@
 #pragma once
 
+#include <format>
 #include <map>
 #include <string>
 
@@ -8,7 +9,7 @@ class WebContext
 {
  public:
 	std::map<std::string, std::string> headers;
-  std::string body;
+	std::string body;
 	int client_fd;
 
 	WebContext(tmpp _templ);
@@ -18,7 +19,7 @@ class WebContext
 	WebContext &operator=(const WebContext &) = default;
 	~WebContext();
 
-	std::string Render(int code, std::string page);
+	std::string Render(int code, std::string page, std::map<std::string, std::string> var);
 
  private:
 	tmpp templ;
