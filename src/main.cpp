@@ -23,47 +23,32 @@ void signalHandler(int signal)
 	}
 }
 
-typedef struct
-{
-	int w;
-	int h;
-} Home;
-
 int main(int argc, char* argv[])
 {
-	int port;
-	cin >> port;
+	tmpp t{"./public"};
+	auto html = t.load_file("./public/index.html");
+	auto fors = t.find_for(html);
 
-	web = new webserve{"./public", port};
+	for (auto f : fors)
+	{
+		cout << t.get_for_content(html, f) << "\n";
+		cout << t.for_iterations(html, f) << "\n";
+	}
 
-	web->GET("/", [](WebContext ctx) -> std::string	{
-	   std::map<std::string, std::string> h = {
-	     {".Title", "Test"},
-	     {"Sub", "substitute"},
-	   };
+	// int port;
+	// cin >> port;
 
-	   return ctx.Render(200, "index", h);
-	});
+	// web = new webserve{"./public", port};
 
-	// web->POST("/home", [](WebContext ctx) -> std::string{
-	//   Home h{0,0};
-	//   cout << ctx.body << endl;
-	//   return ctx.Render(200, "home", h);
+	// web->GET("/", [](WebContext ctx) -> std::string	{
+	//    std::map<std::string, std::string> h = {
+	//      {".Title", "Test"},
+	//      {"Sub", "substitute"},
+	//    };
+
+	//    return ctx.Render(200, "index", h);
 	// });
 
-	// web->POST("/projects", [](WebContext ctx) -> std::string
-	// {
-	//   Home h{0,0};
-	//   cout << ctx.body << endl;
-	//   return ctx.Render(200, "projects", h);
-	// });
-
-	// web->POST("/work", [](WebContext ctx) -> std::string{
-	//   Home h{0,0};
-	//   cout << ctx.body << endl;
-	//   return ctx.Render(200, "work", h);
-	// });
-
-	web->start();
+	// web->start();
 	return 0;
 }

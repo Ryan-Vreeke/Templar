@@ -67,20 +67,20 @@ std::string tmpp::replace_var(std::string html, std::string var,
 {
 	std::vector<int> var_pos = find_all_var(html, var);
 	std::string temp = html;
-  int sub_val = 0;
+	int sub_val = 0;
 
 	for (int i = 0; i < var_pos.size(); i++)
 	{
-    int start = var_pos[i] - 1;
+		int start = var_pos[i] - 1;
 		int end_var = temp.find("}}", start) + 2;
 		int len = end_var - start;
 
-		temp.erase(start , end_var - start);
+		temp.erase(start, end_var - start);
 		temp.insert(start, val);
 
 		if (i != var_pos.size())
 		{
-      sub_val += (len - val.size());
+			sub_val += (len - val.size());
 			var_pos[i + 1] -= sub_val;
 		}
 	}
@@ -165,6 +165,45 @@ std::queue<int> tmpp::definitions(std::string text)
 
 	pos.push(INT_MAX);
 	return pos;
+}
+
+std::vector<int> tmpp::find_for(std::string text)
+{
+	std::vector<int> pos;
+	std::regex pattern("\\{\\s*\\{for\\s*\\.\\(\\d+\\)\\s*\\}\\s*\\}");
+
+	auto words_begin = std::sregex_iterator(text.begin(), text.end(), pattern);
+	auto words_end = std::sregex_iterator();
+
+	for (std::sregex_iterator it = words_begin; it != words_end; ++it)
+	{
+		std::smatch match = *it;
+		std::ptrdiff_t position = match.position(0);
+
+		pos.push_back(position);
+	}
+
+	return pos;
+}
+
+void tmpp::iterate(std::string &html, int iterations){
+
+}
+
+int tmpp::for_iterations(std::string html, int for_pos)
+{
+	int iter = html.find("(", for_pos + 2) + 1;
+	int end = html.find(")", iter);
+
+	return std::stoi(html.substr(iter, end - iter));
+}
+
+std::string tmpp::get_for_content(std::string html, int for_pos)
+{
+	int start_loop = html.find("{", for_pos + 2) + 1;
+	int end_loop = html.find("}", start_loop);
+
+	return html.substr(start_loop, end_loop - start_loop);
 }
 
 std::queue<int> tmpp::find_end_pos(std::string text)

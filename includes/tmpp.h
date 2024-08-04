@@ -23,25 +23,29 @@ class tmpp
 
 	void prep_html(std::string &html);
 	std::string load_file(std::string name);
-  static bool isFile(std::string name);
-  void add_file(const std::string& file);
-  void remove_file(const std::string& file);
-  std::string replace_var(std::string html, std::string var, std::string val);
+	static bool isFile(std::string name);
+	void add_file(const std::string &file);
+	void remove_file(const std::string &file);
+	std::string replace_var(std::string html, std::string var, std::string val);
+	
+  std::vector<int> find_for(std::string text);
+	std::string get_for_content(std::string html, int for_pos);
+	int for_iterations(std::string html, int for_pos);
 
  private:
 	/*Returns false if failed to find def*/
 	bool insert_block(std::string *html, std::string block);
 	std::queue<int> find_end_pos(std::string text);
 	std::queue<int> definitions(std::string text);
-
 	std::vector<std::string> block_headers(std::string html);
-  std::vector<int> find_all_var(std::string html, std::string var);
+	std::vector<int> find_all_var(std::string html, std::string var);
 
 	/*Fill map with blocks defs as keys and content as values*/
 	void fill_map(std::vector<std::string> &filePaths);
 	void replace_headers(std::string *html);
-	void listFiles(const std::filesystem::path &dirPath, std::vector<std::string> &filePaths);
-  void remove_defs(std::string& html);
+	void listFiles(const std::filesystem::path &dirPath,
+								 std::vector<std::string> &filePaths);
+	void remove_defs(std::string &html);
 
 	std::string block_key(std::string str);
 };
