@@ -5,6 +5,7 @@
 #include <cstddef>
 #include <cstdio>
 #include <filesystem>
+#include <format>
 #include <queue>
 #include <regex>
 #include <string>
@@ -22,9 +23,8 @@ tmpp::tmpp(std::string html_path) : public_dir(html_path)
 
 tmpp::~tmpp() {}
 
-
-void tmpp::remove_defs(std::string& html){
-
+void tmpp::remove_defs(std::string &html)
+{
 	std::queue defs = definitions(html);
 	std::queue ends = find_end_pos(html);
 
@@ -34,16 +34,63 @@ void tmpp::remove_defs(std::string& html){
 		int end = ends.front();
 
 		int bloc = html.find("}}", end) + 2;
-    html.erase(start, bloc - start);
+		html.erase(start, bloc - start);
 
 		defs.pop();
 		ends.pop();
 	}
 }
 
+std::vector<int> tmpp::find_all_var(std::string html, std::string var)
+{
+	std::vector<int> pos;
+	std::string search = std::format("\\{{\\s*\\.{}\\s*\\}}", var);
+	std::regex pattern(search);
+
+	auto words_begin = std::sregex_iterator(html.begin(), html.end(), pattern);
+	auto words_end = std::sregex_iterator();
+
+	for (std::sregex_iterator it = words_begin; it != words_end; ++it)
+	{
+		std::smatch match = *it;
+		std::ptrdiff_t position =
+				match.position(0);	// position of the match in the string
+
+		pos.push_back(position);
+	}
+
+	return pos;
+}
+
+std::string tmpp::replace_var(std::string html, std::string var,
+															std::string val)
+{
+	std::vector<int> var_pos = find_all_var(html, var);
+	std::string temp = html;
+  int sub_val = 0;
+
+	for (int i = 0; i < var_pos.size(); i++)
+	{
+    int start = var_pos[i] - 1;
+		int end_var = temp.find("}}", start) + 2;
+		int len = end_var - start;
+
+		temp.erase(start , end_var - start);
+		temp.insert(start, val);
+
+		if (i != var_pos.size())
+		{
+      sub_val += (len - val.size());
+			var_pos[i + 1] -= sub_val;
+		}
+	}
+
+	return temp;
+}
+
 void tmpp::prep_html(std::string &html)
 {
-  remove_defs(html);
+	remove_defs(html);
 	replace_headers(&html);
 }
 
@@ -181,19 +228,17 @@ std::string tmpp::block_key(std::string str)
 	return str.substr(found + 1, end - found - 1);
 }
 
-
 void tmpp::add_file(const std::string &file)
 {
 	std::string html = load_file(file);
-  if(html.empty())
-    return;
-  
+	if (html.empty()) return;
+
 	std::queue<int> def_positions = definitions(html);
 	std::queue<int> end_positions = find_end_pos(html);
 	std::stack<int> def_stack;
 
-  if(def_positions.front() == INT_MAX || end_positions.front() == INT_MAX)
-    return;
+	if (def_positions.front() == INT_MAX || end_positions.front() == INT_MAX)
+		return;
 
 	def_stack.push(def_positions.front());
 	def_positions.pop();
@@ -217,9 +262,10 @@ void tmpp::add_file(const std::string &file)
 			std::string key = block_key(html.substr(start, len));
 			std::string content = html.substr(len, end - len);
 
-      if(block_contents.contains(key)){
-        block_contents.erase(key);
-      }
+			if (block_contents.contains(key))
+			{
+				block_contents.erase(key);
+			}
 
 			block_contents[key] = content;
 
@@ -233,18 +279,19 @@ void tmpp::add_file(const std::string &file)
 	}
 }
 
-void tmpp::remove_file(const std::string &file) {
+void tmpp::remove_file(const std::string &file)
+{
 	std::string html = load_file(file);
 	std::queue<int> def_positions = definitions(html);
 
-  while(def_positions.front() != INT_MAX){
-    int start = def_positions.front();
-    int len = html.find("}}", start) + 2;
+	while (def_positions.front() != INT_MAX)
+	{
+		int start = def_positions.front();
+		int len = html.find("}}", start) + 2;
 
-    std::string key = block_key(html.substr(start, len));
+		std::string key = block_key(html.substr(start, len));
 
-    block_contents.erase(key);
-    def_positions.pop();
-  }
-
+		block_contents.erase(key);
+		def_positions.pop();
+	}
 }
