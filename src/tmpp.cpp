@@ -1,6 +1,5 @@
 #include "tmpp.h"
 
-#include <algorithm>
 #include <climits>
 #include <cstddef>
 #include <cstdio>
@@ -14,13 +13,22 @@
 namespace fs = std::filesystem;
 
 tmpp::tmpp(std::string html_path) : public_dir(html_path) {
-  std::vector<std::string> filePaths;
-  listFiles(html_path, filePaths);
-
-  fill_map(filePaths);
+  init_temple();
 }
 
 tmpp::~tmpp() {}
+
+void tmpp::reload_defs(){
+  block_contents.clear();
+  init_temple();
+}
+
+void tmpp::init_temple(){
+  std::vector<std::string> filePaths;
+  listFiles(public_dir, filePaths);
+
+  fill_map(filePaths);
+}
 
 void tmpp::remove_defs(std::string &html) {
   std::queue defs = definitions(html);
