@@ -23,6 +23,8 @@ std::string WebContext::Render(int code, std::string page,
 		html = templ.replace_var(html, variable, pair.second);
 	}
 
+  templ.iterate(html);
+
 	return std::format(
 			"HTTP/1.1 {}\r\nContent-Type:{}\r\nContent-Lenght:{}\r\n\r\n{}\r\n",
 			response_map[code], "text/html; charset=UTF-8", html.length(), html);

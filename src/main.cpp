@@ -28,23 +28,20 @@ int main(int argc, char* argv[])
 	tmpp t{"./public"};
 	auto html = t.load_file("./public/index.html");
 
-  t.iterate(html);
-  cout << html << endl;
+	int port;
+	cin >> port;
 
-	// int port;
-	// cin >> port;
+	web = new webserve{"./public", port};
 
-	// web = new webserve{"./public", port};
+	web->GET("/", [](WebContext ctx) -> std::string	{
+	   std::map<std::string, std::string> h = {
+	     {".Title", "Test"},
+	     {"Sub", "substitute"},
+	   };
 
-	// web->GET("/", [](WebContext ctx) -> std::string	{
-	//    std::map<std::string, std::string> h = {
-	//      {".Title", "Test"},
-	//      {"Sub", "substitute"},
-	//    };
+	   return ctx.Render(200, "index", h);
+	});
 
-	//    return ctx.Render(200, "index", h);
-	// });
-
-	// web->start();
+	web->start();
 	return 0;
 }
