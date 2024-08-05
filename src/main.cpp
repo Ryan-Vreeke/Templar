@@ -27,13 +27,9 @@ int main(int argc, char* argv[])
 {
 	tmpp t{"./public"};
 	auto html = t.load_file("./public/index.html");
-	auto fors = t.find_for(html);
 
-	for (auto f : fors)
-	{
-		cout << t.get_for_content(html, f) << "\n";
-		cout << t.for_iterations(html, f) << "\n";
-	}
+  t.iterate(html);
+  cout << html << endl;
 
 	// int port;
 	// cin >> port;
