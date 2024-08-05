@@ -8,7 +8,7 @@ EXECUTABLE=temple
 SHARED_LIB=libtemple.so
 STATIC_LIB=libtemple.a
 
-all: $(SHARED_LIB)
+all: $(STATIC_LIB)
 
 $(SHARED_LIB): $(OBJECTS)
 	$(CC) -shared $(CFLAGS) -o $@ $^
