@@ -20,14 +20,16 @@ public:
   tmpp &operator=(const tmpp &) = default;
   ~tmpp();
 
-  void prep_html(std::string &html);
-  std::string load_file(std::string name);
   static bool isFile(std::string name);
+
+  void reload_defs();
+  void iterate(std::string &html);
   void add_file(const std::string &file);
   void remove_file(const std::string &file);
-  std::string replace_var(std::string html, std::string var, std::string val);
+  void prep_html(std::string &html);
 
-  void iterate(std::string &html);
+  std::string replace_var(std::string html, std::string var, std::string val);
+  std::string load_file(std::string name);
 
 private:
   /*Returns false if failed to find def*/
@@ -42,6 +44,7 @@ private:
   void replace_headers(std::string *html);
   void listFiles(const std::filesystem::path &dirPath, std::vector<std::string> &filePaths);
   void remove_defs(std::string &html);
+  void init_temple();
 
   /*
    * @breif: find position of all for loops in text. start positions returned

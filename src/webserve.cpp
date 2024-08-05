@@ -19,221 +19,204 @@
 #define SA struct sockaddr
 
 webserve::webserve(std::string pages, int port)
-		: port(port), pages(pages), templ(pages), file_watcher(pages)
-{
-	int conn_fd;
-	struct sockaddr_in addr, cli;
-	int opt = 1;
-	int addrlen = sizeof(cli);
+    : port(port), pages(pages), templ(pages), file_watcher(pages) {
+  int conn_fd;
+  struct sockaddr_in addr, cli;
+  int opt = 1;
+  int addrlen = sizeof(cli);
 
-	// socket create
-	if ((server_socket = socket(AF_INET, SOCK_STREAM, 0)) == 0)
-		perror("socket failed");
+  // socket create
+  if ((server_socket = socket(AF_INET, SOCK_STREAM, 0)) == 0)
+    perror("socket failed");
 
-	addr.sin_family = AF_INET;
-	addr.sin_addr.s_addr = INADDR_ANY;
-	addr.sin_port = htons(port);
+  addr.sin_family = AF_INET;
+  addr.sin_addr.s_addr = INADDR_ANY;
+  addr.sin_port = htons(port);
 
-	// binding socket to given IP and verification
-	if ((bind(server_socket, (SA *)&addr, sizeof(addr))) != 0)
-		perror("socket bind failed...\n");
-	else
-		printf("Socket bind successful.... \n");
+  // binding socket to given IP and verification
+  if ((bind(server_socket, (SA *)&addr, sizeof(addr))) != 0) {
+    perror("socket bind failed...\n");
+    return;
+  }
 
-	// making watchfolder
-	file_watcher.init_watchman();
-	file_watcher_cb = new watchman_cb();
+  printf("Socket bind successful.... \n");
 
-	file_watcher_cb->created_cb = [&](const std::string &str)
-	{ file_created(str); };
-	file_watcher_cb->delete_cb = [&](const std::string &str)
-	{ file_deleted(str); };
-	file_watcher_cb->modify_cb = [&](const std::string &str)
-	{ file_modified(str); };
-	file_watcher_cb->moved_cb = [&](const std::string &str, bool in)
-	{ file_moved(str, in); };
+  // making watchfolder
+  file_watcher.init_watchman();
+  file_watcher_cb = new watchman_cb();
+
+  file_watcher_cb->created_cb = [&](const std::string &str) {
+    file_created(str);
+  };
+
+  file_watcher_cb->delete_cb = [&](const std::string &str) {
+    file_deleted(str);
+  };
+
+  file_watcher_cb->modify_cb = [&](const std::string &str) {
+    file_modified(str);
+  };
+
+  file_watcher_cb->moved_cb = [&](const std::string &str, bool in) {
+    file_moved(str, in);
+  };
 }
 
-webserve::~webserve()
-{
-	close(server_socket);
-	file_watcher.stop();
-	delete file_watcher_cb;
+webserve::~webserve() {
+  close(server_socket);
+  file_watcher.stop();
+  delete file_watcher_cb;
 }
 
-void webserve::start()
-{
-	running = true;
-	file_watcher.start_watch(file_watcher_cb);
-	std::thread listen_thread([&]() { listen_loop(); });
+void webserve::start() {
+  running = true;
+  file_watcher.start_watch(file_watcher_cb);
+  std::thread listen_thread([&]() { listen_loop(); });
 
-	listen_thread.join();
+  listen_thread.join();
 }
 
 std::vector<std::string> webserve::split_string(std::string str,
-																								const std::string &delim)
-{
-	std::vector<std::string> tokens;
-	std::string token;
+                                                const std::string &delim) {
+  std::vector<std::string> tokens;
+  std::string token;
 
-	size_t pos = 0;
-	size_t start = 0;
+  size_t pos = 0;
+  size_t start = 0;
 
-	while ((pos = str.find(delim, start)) != std::string::npos)
-	{
-		token = str.substr(start, pos - start);
+  while ((pos = str.find(delim, start)) != std::string::npos) {
+    token = str.substr(start, pos - start);
 
-		start = pos + delim.length();
-		tokens.push_back(token);
-	}
+    start = pos + delim.length();
+    tokens.push_back(token);
+  }
 
-	token = str.substr(start, str.length() - start);
-	tokens.push_back(token);
+  token = str.substr(start, str.length() - start);
+  tokens.push_back(token);
 
-	return tokens;
+  return tokens;
 }
 
-bool webserve::contains(std::string str, std::string token)
-{
-	return str.find(token) != std::string::npos;
+bool webserve::contains(std::string str, std::string token) {
+  return str.find(token) != std::string::npos;
 }
 
 // FIX: doesn't stop thread correctly
 void webserve::stop() { running = false; }
 
 void webserve::add_headers(std::map<std::string, std::string> &headers,
-													 std::vector<std::string> lines)
-{
-	for (int i = 1; i < lines.size(); i++)
-	{
-		std::vector<std::string> header_line = split_string(lines[i], ":");
-		if (header_line.size() < 2)
-		{
-			continue;
-		}
-		headers[header_line[0]] = header_line[1];
-	}
+                           std::vector<std::string> lines) {
+  for (int i = 1; i < lines.size(); i++) {
+    std::vector<std::string> header_line = split_string(lines[i], ":");
+    if (header_line.size() < 2) {
+      continue;
+    }
+    headers[header_line[0]] = header_line[1];
+  }
 }
 
-bool webserve::isPath(std::string path)
-{
-	return (get_map.contains(path) || post_map.contains(path));
+bool webserve::isPath(std::string path) {
+  return (get_map.contains(path) || post_map.contains(path));
 }
 
-std::string webserve::send_file(std::string path, WebContext context)
-{
-	std::string page = templ.load_file(path);
-	std::string ret_code = "200 OK";
-	if (page == "")
-	{
-		ret_code = "500 Internal Server Error";
-	}
+std::string webserve::send_file(std::string path, WebContext context) {
+  std::string page = templ.load_file(path);
+  std::string ret_code = "200 OK";
+  if (page == "") {
+    ret_code = "500 Internal Server Error";
+  }
 
-	return std::format(
-			"HTTP/1.1 {}\r\nContent-Type:{}\r\nContent-Length:{}\r\n\r\n{}\r\n",
-			ret_code, context.headers["Accept"], page.length(), page);
+  return std::format(
+      "HTTP/1.1 {}\r\nContent-Type:{}\r\nContent-Length:{}\r\n\r\n{}\r\n",
+      ret_code, context.headers["Accept"], page.length(), page);
 }
 
-void webserve::handle_client(int client_fd)
-{
-	std::string response;
-	char request[1024] = {0};
-	int valread = read(client_fd, request, 1024);
+void webserve::handle_client(int client_fd) {
+  std::string response;
+  char request[1024] = {0};
+  int valread = read(client_fd, request, 1024);
 
-	WebContext context{templ};
-	context.client_fd = client_fd;
+  WebContext context{templ};
+  context.client_fd = client_fd;
 
-	std::vector<std::string> lines = split_string(request, "\r\n");
-	std::vector<std::string> request_line = split_string(lines[0], " ");
-	std::cout << request_line[1] << std::endl;
+  std::vector<std::string> lines = split_string(request, "\r\n");
+  std::vector<std::string> request_line = split_string(lines[0], " ");
+  std::cout << request_line[1] << std::endl;
 
-	add_headers(context.headers, lines);
+  add_headers(context.headers, lines);
 
-	if (tmpp::isFile(templ.public_dir + request_line[1]) &&
-			!isPath(request_line[1]))
-	{
-		response = send_file(templ.public_dir + request_line[1], context);
-		send(client_fd, response.c_str(), response.length(), 0);
-		close(client_fd);
-		return;
-	}
+  if (tmpp::isFile(templ.public_dir + request_line[1]) &&
+      !isPath(request_line[1])) {
+    response = send_file(templ.public_dir + request_line[1], context);
+    send(client_fd, response.c_str(), response.length(), 0);
+    close(client_fd);
+    return;
+  }
 
-	if (!isPath(request_line[1]))
-	{
-		response = std::format("HTTP/1.1 {}\r\nContent-Type:{}\r\n\r\n{}\r\n",
-													 "404 Not Found", context.headers["Accept"],
-													 "PAGE NOT FOUND");
+  if (!isPath(request_line[1])) {
+    response = std::format("HTTP/1.1 {}\r\nContent-Type:{}\r\n\r\n{}\r\n",
+                           "404 Not Found", context.headers["Accept"],
+                           "PAGE NOT FOUND");
 
-		send(client_fd, response.c_str(), response.length(), 0);
-		close(client_fd);
-		return;
-	}
+    send(client_fd, response.c_str(), response.length(), 0);
+    close(client_fd);
+    return;
+  }
 
-	if (request_line[0] == "GET" && get_map.contains(request_line[1]))
-	{
-		response = get_map[request_line[1]](context);
-	}
-	else if (request_line[0] == "POST" && post_map.contains(request_line[1]))
-	{
+  if (request_line[0] == "GET" && get_map.contains(request_line[1])) {
+    response = get_map[request_line[1]](context);
+  } else if (request_line[0] == "POST" && post_map.contains(request_line[1])) {
     context.body = lines[lines.size() - 1];
-		response = post_map[request_line[1]](context);
-	}
+    response = post_map[request_line[1]](context);
+  }
 
-	send(client_fd, response.c_str(), response.length(), 0);
-	close(client_fd);
+  send(client_fd, response.c_str(), response.length(), 0);
+  close(client_fd);
 }
 
-void webserve::listen_loop()
-{
-	struct sockaddr_in addr;
-	int addrlen = sizeof(addr);
+void webserve::listen_loop() {
+  struct sockaddr_in addr;
+  int addrlen = sizeof(addr);
 
-	if ((listen(server_socket, 5)) != 0)
-	{
-		perror("Listen Failed....");
-	}
+  if ((listen(server_socket, 5)) != 0) {
+    perror("Listen Failed....");
+  }
 
-	while (running)
-	{
-		int conn_fd = accept(server_socket, (SA *)&addr, (socklen_t *)&addrlen);
+  while (running) {
+    int conn_fd = accept(server_socket, (SA *)&addr, (socklen_t *)&addrlen);
 
-		std::thread client_thread([this, conn_fd]() { handle_client(conn_fd); });
-		client_thread.detach();
-	}
+    std::thread client_thread([this, conn_fd]() { handle_client(conn_fd); });
+    client_thread.detach();
+  }
 }
 
-void webserve::GET(std::string path, std::function<std::string(WebContext)> cb)
-{
-	get_map[path] = cb;
+void webserve::GET(std::string path,
+                   std::function<std::string(WebContext)> cb) {
+  get_map[path] = cb;
 }
 
-void webserve::POST(std::string path, std::function<std::string(WebContext)> cb)
-{
-	post_map[path] = cb;
+void webserve::POST(std::string path,
+                    std::function<std::string(WebContext)> cb) {
+  post_map[path] = cb;
 }
 
-void webserve::file_created(const std::string &str)
-{
-	templ.add_file(templ.public_dir + "/" + str);
+void webserve::file_created(const std::string &str) {
+  templ.add_file(templ.public_dir + "/" + str);
 }
 
-void webserve::file_deleted(const std::string &str)
-{
-	templ.remove_file(templ.public_dir + "/" + str);
+void webserve::file_deleted(const std::string &str) {
+  templ.reload_defs();
 }
 
-void webserve::file_modified(const std::string &str)
-{
-	templ.add_file(templ.public_dir + "/" + str);
+void webserve::file_modified(const std::string &str) {
+  templ.add_file(templ.public_dir + "/" + str);
 }
 
-void webserve::file_moved(const std::string &str, bool in)
-{
-	if (in)
-	{
-		templ.add_file(templ.public_dir + "/" + str);
-		return;
-	}
+void webserve::file_moved(const std::string &str, bool in) {
+  if (in) {
+    templ.add_file(templ.public_dir + "/" + str);
+    return;
+  }
 
-	templ.remove_file(templ.public_dir + "/" + str);
+  templ.reload_defs();
 }
