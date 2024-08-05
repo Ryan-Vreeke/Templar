@@ -17,14 +17,12 @@
     ></script>
   </head>
   <body>
-    <h2>{{.Sub}}</h2>
-    <h1>
-      {{.Title}}</h1>
-    <h1>{{.Title}}
-    </h1>
-    <h1>
-      {{.None}}
-    </h1>
+
+    {{for .(10)}} { 
+    <h1>{{.Title}}</h1> }
+
+    {{for .(3)}} {<h1>here</h1> }
+
   </body>
 </html>
-{{end}} 
+{{end}}

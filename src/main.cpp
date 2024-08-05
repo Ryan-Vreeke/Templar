@@ -23,14 +23,11 @@ void signalHandler(int signal)
 	}
 }
 
-typedef struct
-{
-	int w;
-	int h;
-} Home;
-
 int main(int argc, char* argv[])
 {
+	tmpp t{"./public"};
+	auto html = t.load_file("./public/index.html");
+
 	int port;
 	cin >> port;
 
@@ -44,25 +41,6 @@ int main(int argc, char* argv[])
 
 	   return ctx.Render(200, "index", h);
 	});
-
-	// web->POST("/home", [](WebContext ctx) -> std::string{
-	//   Home h{0,0};
-	//   cout << ctx.body << endl;
-	//   return ctx.Render(200, "home", h);
-	// });
-
-	// web->POST("/projects", [](WebContext ctx) -> std::string
-	// {
-	//   Home h{0,0};
-	//   cout << ctx.body << endl;
-	//   return ctx.Render(200, "projects", h);
-	// });
-
-	// web->POST("/work", [](WebContext ctx) -> std::string{
-	//   Home h{0,0};
-	//   cout << ctx.body << endl;
-	//   return ctx.Render(200, "work", h);
-	// });
 
 	web->start();
 	return 0;
