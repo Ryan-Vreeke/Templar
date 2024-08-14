@@ -34,10 +34,11 @@ public:
 private:
   /*Returns false if failed to find def*/
   bool insert_block(std::string *html, std::string block);
-  std::queue<int> find_end_pos(std::string text);
-  std::queue<int> definitions(std::string text);
+  std::queue<int> find_end_pos(const std::string& text);
+  std::queue<int> definitions(const std::string& text);
   std::vector<std::string> block_headers(std::string html);
-  std::vector<int> find_all_var(std::string html, std::string var);
+  std::vector<int> find_all_var(const std::string& html, const std::string& var);
+  std::vector<int> search_regex(const std::string& html, const std::string& regex);
 
   /*Fill map with blocks defs as keys and content as values*/
   void fill_map(std::vector<std::string> &filePaths);
@@ -50,7 +51,7 @@ private:
    * @breif: find position of all for loops in text. start positions returned
    * @return vector<int>: start positions of for loops in text
    */
-  std::vector<int> find_for(std::string text);
+  std::vector<int> find_for(const std::string& text);
   /*
    * @breif gets the number of iterations a loop needs to run for
    * @params html: string, for_pos: int
