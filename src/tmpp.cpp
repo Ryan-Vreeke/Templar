@@ -235,10 +235,8 @@ int tmpp::get_iterations(const std::string &html, int for_pos)
 {
   int iter = html.find("(", for_pos + 2) + 1;
   int end = html.find(")", iter);
-  std::string test = html.substr(iter, end - iter);
-  std::cout << test << std::endl;
 
-  return std::stoi(test);
+  return std::stoi(html.substr(iter, end - iter));
 }
 
 std::string tmpp::get_content(const std::string &html, int start, int end)
