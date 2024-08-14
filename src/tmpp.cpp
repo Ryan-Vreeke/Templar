@@ -159,6 +159,11 @@ std::vector<std::string> tmpp::block_headers(std::string html)
   return headers;
 }
 
+std::vector<int> tmpp::find_break(const std::string &text)
+{
+  std::string pattern("\\{\\s*\\{/for\\s*\\}\\s*\\}");
+  return search_regex(text, pattern);
+}
 
 std::vector<int> tmpp::find_for(const std::string &text)
 {
@@ -166,47 +171,80 @@ std::vector<int> tmpp::find_for(const std::string &text)
   return search_regex(text, pattern);
 }
 
-void tmpp::iterate(std::string &html)
+void tmpp::replace_for(std::string &html)
 {
-  std::vector<int> loops = find_for(html);
-  std::string content;
-  int offset = 0;
+  std::vector<int> for_positions = find_for(html);
+  std::vector<int> break_positions = find_break(html);
+  std::stack<int> fStack;
 
-  for (const auto &loop : loops)
+  for_positions.push_back(INT_MAX);
+  break_positions.push_back(INT_MAX);
+
+
+  int startOffset = 0;
+  int endOffset = 0;
+
+  int i = 0;
+  int j = 0;
+  while (1)
   {
-    int iterations = for_iterations(html, loop + offset);
-    int loop_end = get_for_content(html, loop + offset, content);
-
-    // remove loop from html
-    html.erase(loop + offset, loop_end - (loop + offset));
-
-    int inner_offset = 0;
-    for (int i = 0; i < iterations; i++)
+    int element = for_positions[j];
+    if (break_positions[i] == element)
     {
-      html.insert(loop + (offset + inner_offset), content);
-      inner_offset += content.length();
+      break;
     }
 
-    offset -= (loop_end - (loop + offset));
-    offset += inner_offset;
+    if (element < break_positions[i])
+    {
+      fStack.push(element);
+      j++;
+      continue;
+    }
+
+    int start = fStack.top() + startOffset;
+    int end = break_positions[i] + endOffset;
+    fStack.pop();
+
+    int iter = get_iterations(html, start);
+    std::string content = get_content(html, start, end);
+
+    end = html.find("}}", end) + 2;
+    html.erase(start, end - start);
+
+    for (int k = 0; k < iter; k++)
+    {
+      html.insert(start, content);
+      start += content.length();
+    }
+
+    if (fStack.empty())
+    {
+      startOffset += start - end;
+      endOffset += start - end;
+    }
+    else
+    {
+      endOffset += start - end;
+    }
+
+    i++;
   }
 }
 
-int tmpp::for_iterations(std::string html, int for_pos)
+int tmpp::get_iterations(const std::string &html, int for_pos)
 {
   int iter = html.find("(", for_pos + 2) + 1;
   int end = html.find(")", iter);
+  std::string test = html.substr(iter, end - iter);
+  std::cout << test << std::endl;
 
-  return std::stoi(html.substr(iter, end - iter));
+  return std::stoi(test);
 }
 
-int tmpp::get_for_content(std::string html, int for_pos, std::string &content)
+std::string tmpp::get_content(const std::string &html, int start, int end)
 {
-  int start_loop = html.find("{", for_pos + 2) + 1;
-  int end_loop = html.find("}", start_loop);
-
-  content = html.substr(start_loop, end_loop - start_loop);
-  return end_loop + 1;
+  start = html.find("}}", start) + 2;
+  return html.substr(start, end - start);
 }
 
 std::queue<int> tmpp::definitions(const std::string &text)
