@@ -13,8 +13,7 @@ using namespace std;
 void signalHandler(int signal)
 {
 	if (signal == SIGINT)
-	{
-		std::cout << "Closing Server" << std::endl;
+	{ std::cout << "Closing Server" << std::endl;
 		web->stop();
 
 		delete web;
@@ -25,6 +24,9 @@ int main(int argc, char* argv[])
 {
 	tmpp t{"./public"};
 	auto html = t.load_file("./public/index.html");
+  t.replace_for(html);
+
+  cout << html << endl;
 
 	int port;
 	cin >> port;

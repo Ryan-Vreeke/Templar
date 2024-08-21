@@ -8,7 +8,8 @@
 #include <string>
 #include <vector>
 
-class tmpp {
+class tmpp
+{
 public:
   std::string public_dir;
   std::map<std::string, std::string> block_contents;
@@ -30,39 +31,27 @@ public:
 
   std::string replace_var(std::string html, std::string var, std::string val);
   std::string load_file(std::string name);
+  void replace_for(std::string& html);
 
 private:
   /*Returns false if failed to find def*/
   bool insert_block(std::string *html, std::string block);
-  std::queue<int> find_end_pos(const std::string& text);
-  std::queue<int> definitions(const std::string& text);
+  std::queue<int> find_end_pos(const std::string &text);
+  std::queue<int> definitions(const std::string &text);
   std::vector<std::string> block_headers(std::string html);
-  std::vector<int> find_all_var(const std::string& html, const std::string& var);
-  std::vector<int> search_regex(const std::string& html, const std::string& regex);
+  std::vector<int> find_all_var(const std::string &html, const std::string &var);
+  std::vector<int> search_regex(const std::string &html, const std::string &regex);
 
   /*Fill map with blocks defs as keys and content as values*/
   void fill_map(std::vector<std::string> &filePaths);
   void replace_headers(std::string *html);
   void listFiles(const std::filesystem::path &dirPath, std::vector<std::string> &filePaths);
   void remove_defs(std::string &html);
+  std::string block_key(std::string str);
   void init_temple();
 
-  /*
-   * @breif: find position of all for loops in text. start positions returned
-   * @return vector<int>: start positions of for loops in text
-   */
-  std::vector<int> find_for(const std::string& text);
-  /*
-   * @breif gets the number of iterations a loop needs to run for
-   * @params html: string, for_pos: int
-   * @return int: number of iterations loop runs
-   * */
-  int for_iterations(std::string html, int for_pos);
-
-  /**
-   * @return: the position of the end of the for loop
-   */
-  int get_for_content(std::string html, int for_pos, std::string &content);
-
-  std::string block_key(std::string str);
+  std::vector<int> find_for(const std::string &text);
+  std::vector<int> find_break(const std::string &text);
+  int get_iterations(const std::string &html, int for_pos);
+  std::string get_content(const std::string &html, int start, int end);
 };
