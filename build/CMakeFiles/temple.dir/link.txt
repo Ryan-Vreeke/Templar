@@ -1,0 +1,1 @@
+/usr/bin/c++ CMakeFiles/temple.dir/src/Watchman.cpp.o CMakeFiles/temple.dir/src/WebContext.cpp.o CMakeFiles/temple.dir/src/main.cpp.o CMakeFiles/temple.dir/src/tmpp.cpp.o CMakeFiles/temple.dir/src/webserve.cpp.o -o temple  -lpthread

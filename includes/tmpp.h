@@ -8,8 +8,7 @@
 #include <string>
 #include <vector>
 
-class tmpp
-{
+class tmpp {
 public:
   std::string public_dir;
   std::map<std::string, std::string> block_contents;
@@ -24,14 +23,13 @@ public:
   static bool isFile(std::string name);
 
   void reload_defs();
-  void iterate(std::string &html);
   void add_file(const std::string &file);
   void remove_file(const std::string &file);
   void prep_html(std::string &html);
 
   std::string replace_var(std::string html, std::string var, std::string val);
   std::string load_file(std::string name);
-  void replace_for(std::string& html);
+  void replace_for(std::string &html);
 
 private:
   /*Returns false if failed to find def*/
@@ -39,13 +37,16 @@ private:
   std::queue<int> find_end_pos(const std::string &text);
   std::queue<int> definitions(const std::string &text);
   std::vector<std::string> block_headers(std::string html);
-  std::vector<int> find_all_var(const std::string &html, const std::string &var);
-  std::vector<int> search_regex(const std::string &html, const std::string &regex);
+  std::vector<int> find_all_var(const std::string &html,
+                                const std::string &var);
+  std::vector<int> search_regex(const std::string &html,
+                                const std::string &regex);
 
   /*Fill map with blocks defs as keys and content as values*/
   void fill_map(std::vector<std::string> &filePaths);
   void replace_headers(std::string *html);
-  void listFiles(const std::filesystem::path &dirPath, std::vector<std::string> &filePaths);
+  void listFiles(const std::filesystem::path &dirPath,
+                 std::vector<std::string> &filePaths);
   void remove_defs(std::string &html);
   std::string block_key(std::string str);
   void init_temple();
