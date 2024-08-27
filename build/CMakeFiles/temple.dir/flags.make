@@ -4,7 +4,7 @@
 # compile CXX with /usr/bin/c++
 CXX_DEFINES = 
 
-CXX_INCLUDES = -I/home/ryan/source/Templar/includes -I/home/ryan/source/Templar/build/_deps/json-src/include
+CXX_INCLUDES = -I/home/ryan/Source/Templar/includes -I/home/ryan/Source/Templar/build/_deps/json-src/include
 
 CXX_FLAGS = -std=gnu++20
 

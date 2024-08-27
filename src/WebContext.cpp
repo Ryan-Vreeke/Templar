@@ -28,9 +28,8 @@ std::string WebContext::Render(int code, std::string page,
       response_map[code], "text/html; charset=UTF-8", html.length(), html);
 }
 
-
-
-std::string WebContext::Render(int code, std::string page, nlohmann::json json){
+std::string WebContext::Render(int code, std::string page,
+                               nlohmann::json json) {
   if (!templ.block_contents.contains(page))
     return std::format("HTTP/1.1 {}\r\nContent-Type:{}\r\n\r\n{}\r\n",
                        response_map[code], "text/html; charset=UTF-8", page);
@@ -38,6 +37,9 @@ std::string WebContext::Render(int code, std::string page, nlohmann::json json){
   std::string html = templ.block_contents[page];
   templ.prep_html(html);
 
+  for (json::iterator it = json.begin(); it != json.end(); it++) {
+    templ.replace_var(html, it.key(), it.value());
+  }
 
   templ.replace_for(html);
 

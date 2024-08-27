@@ -5,8 +5,8 @@ cmake_minimum_required(VERSION 3.5)
 
 # Make file names absolute:
 #
-get_filename_component(filename "/home/ryan/source/Templar/build/_deps/json-subbuild/json-populate-prefix/src/json.tar.xz" ABSOLUTE)
-get_filename_component(directory "/home/ryan/source/Templar/build/_deps/json-src" ABSOLUTE)
+get_filename_component(filename "/home/ryan/Source/Templar/build/_deps/json-subbuild/json-populate-prefix/src/json.tar.xz" ABSOLUTE)
+get_filename_component(directory "/home/ryan/Source/Templar/build/_deps/json-src" ABSOLUTE)
 
 message(VERBOSE "extracting...
      src='${filename}'

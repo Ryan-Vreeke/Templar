@@ -1,4 +1,4 @@
-# Install script for directory: /home/ryan/source/Templar/build/_deps/json-src
+# Install script for directory: /home/ryan/Source/Templar/build/_deps/json-src
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)

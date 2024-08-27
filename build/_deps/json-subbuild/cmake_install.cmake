@@ -1,4 +1,4 @@
-# Install script for directory: /home/ryan/source/Templar/build/_deps/json-subbuild
+# Install script for directory: /home/ryan/Source/Templar/build/_deps/json-subbuild
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -52,6 +52,6 @@ endif()
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-  file(WRITE "/home/ryan/source/Templar/build/_deps/json-subbuild/${CMAKE_INSTALL_MANIFEST}"
+  file(WRITE "/home/ryan/Source/Templar/build/_deps/json-subbuild/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")
 endif()

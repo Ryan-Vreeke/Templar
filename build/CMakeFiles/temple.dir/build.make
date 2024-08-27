@@ -53,10 +53,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/ryan/source/Templar
+CMAKE_SOURCE_DIR = /home/ryan/Source/Templar
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/ryan/source/Templar/build
+CMAKE_BINARY_DIR = /home/ryan/Source/Templar/build
 
 # Include any dependencies generated for this target.
 include CMakeFiles/temple.dir/depend.make
@@ -70,74 +70,74 @@ include CMakeFiles/temple.dir/progress.make
 include CMakeFiles/temple.dir/flags.make
 
 CMakeFiles/temple.dir/src/Watchman.cpp.o: CMakeFiles/temple.dir/flags.make
-CMakeFiles/temple.dir/src/Watchman.cpp.o: /home/ryan/source/Templar/src/Watchman.cpp
+CMakeFiles/temple.dir/src/Watchman.cpp.o: /home/ryan/Source/Templar/src/Watchman.cpp
 CMakeFiles/temple.dir/src/Watchman.cpp.o: CMakeFiles/temple.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/ryan/source/Templar/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/temple.dir/src/Watchman.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/temple.dir/src/Watchman.cpp.o -MF CMakeFiles/temple.dir/src/Watchman.cpp.o.d -o CMakeFiles/temple.dir/src/Watchman.cpp.o -c /home/ryan/source/Templar/src/Watchman.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/ryan/Source/Templar/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/temple.dir/src/Watchman.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/temple.dir/src/Watchman.cpp.o -MF CMakeFiles/temple.dir/src/Watchman.cpp.o.d -o CMakeFiles/temple.dir/src/Watchman.cpp.o -c /home/ryan/Source/Templar/src/Watchman.cpp
 
 CMakeFiles/temple.dir/src/Watchman.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/temple.dir/src/Watchman.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/ryan/source/Templar/src/Watchman.cpp > CMakeFiles/temple.dir/src/Watchman.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/ryan/Source/Templar/src/Watchman.cpp > CMakeFiles/temple.dir/src/Watchman.cpp.i
 
 CMakeFiles/temple.dir/src/Watchman.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/temple.dir/src/Watchman.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/ryan/source/Templar/src/Watchman.cpp -o CMakeFiles/temple.dir/src/Watchman.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/ryan/Source/Templar/src/Watchman.cpp -o CMakeFiles/temple.dir/src/Watchman.cpp.s
 
 CMakeFiles/temple.dir/src/WebContext.cpp.o: CMakeFiles/temple.dir/flags.make
-CMakeFiles/temple.dir/src/WebContext.cpp.o: /home/ryan/source/Templar/src/WebContext.cpp
+CMakeFiles/temple.dir/src/WebContext.cpp.o: /home/ryan/Source/Templar/src/WebContext.cpp
 CMakeFiles/temple.dir/src/WebContext.cpp.o: CMakeFiles/temple.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/ryan/source/Templar/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/temple.dir/src/WebContext.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/temple.dir/src/WebContext.cpp.o -MF CMakeFiles/temple.dir/src/WebContext.cpp.o.d -o CMakeFiles/temple.dir/src/WebContext.cpp.o -c /home/ryan/source/Templar/src/WebContext.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/ryan/Source/Templar/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/temple.dir/src/WebContext.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/temple.dir/src/WebContext.cpp.o -MF CMakeFiles/temple.dir/src/WebContext.cpp.o.d -o CMakeFiles/temple.dir/src/WebContext.cpp.o -c /home/ryan/Source/Templar/src/WebContext.cpp
 
 CMakeFiles/temple.dir/src/WebContext.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/temple.dir/src/WebContext.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/ryan/source/Templar/src/WebContext.cpp > CMakeFiles/temple.dir/src/WebContext.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/ryan/Source/Templar/src/WebContext.cpp > CMakeFiles/temple.dir/src/WebContext.cpp.i
 
 CMakeFiles/temple.dir/src/WebContext.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/temple.dir/src/WebContext.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/ryan/source/Templar/src/WebContext.cpp -o CMakeFiles/temple.dir/src/WebContext.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/ryan/Source/Templar/src/WebContext.cpp -o CMakeFiles/temple.dir/src/WebContext.cpp.s
 
 CMakeFiles/temple.dir/src/main.cpp.o: CMakeFiles/temple.dir/flags.make
-CMakeFiles/temple.dir/src/main.cpp.o: /home/ryan/source/Templar/src/main.cpp
+CMakeFiles/temple.dir/src/main.cpp.o: /home/ryan/Source/Templar/src/main.cpp
 CMakeFiles/temple.dir/src/main.cpp.o: CMakeFiles/temple.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/ryan/source/Templar/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/temple.dir/src/main.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/temple.dir/src/main.cpp.o -MF CMakeFiles/temple.dir/src/main.cpp.o.d -o CMakeFiles/temple.dir/src/main.cpp.o -c /home/ryan/source/Templar/src/main.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/ryan/Source/Templar/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/temple.dir/src/main.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/temple.dir/src/main.cpp.o -MF CMakeFiles/temple.dir/src/main.cpp.o.d -o CMakeFiles/temple.dir/src/main.cpp.o -c /home/ryan/Source/Templar/src/main.cpp
 
 CMakeFiles/temple.dir/src/main.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/temple.dir/src/main.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/ryan/source/Templar/src/main.cpp > CMakeFiles/temple.dir/src/main.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/ryan/Source/Templar/src/main.cpp > CMakeFiles/temple.dir/src/main.cpp.i
 
 CMakeFiles/temple.dir/src/main.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/temple.dir/src/main.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/ryan/source/Templar/src/main.cpp -o CMakeFiles/temple.dir/src/main.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/ryan/Source/Templar/src/main.cpp -o CMakeFiles/temple.dir/src/main.cpp.s
 
 CMakeFiles/temple.dir/src/tmpp.cpp.o: CMakeFiles/temple.dir/flags.make
-CMakeFiles/temple.dir/src/tmpp.cpp.o: /home/ryan/source/Templar/src/tmpp.cpp
+CMakeFiles/temple.dir/src/tmpp.cpp.o: /home/ryan/Source/Templar/src/tmpp.cpp
 CMakeFiles/temple.dir/src/tmpp.cpp.o: CMakeFiles/temple.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/ryan/source/Templar/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/temple.dir/src/tmpp.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/temple.dir/src/tmpp.cpp.o -MF CMakeFiles/temple.dir/src/tmpp.cpp.o.d -o CMakeFiles/temple.dir/src/tmpp.cpp.o -c /home/ryan/source/Templar/src/tmpp.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/ryan/Source/Templar/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/temple.dir/src/tmpp.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/temple.dir/src/tmpp.cpp.o -MF CMakeFiles/temple.dir/src/tmpp.cpp.o.d -o CMakeFiles/temple.dir/src/tmpp.cpp.o -c /home/ryan/Source/Templar/src/tmpp.cpp
 
 CMakeFiles/temple.dir/src/tmpp.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/temple.dir/src/tmpp.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/ryan/source/Templar/src/tmpp.cpp > CMakeFiles/temple.dir/src/tmpp.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/ryan/Source/Templar/src/tmpp.cpp > CMakeFiles/temple.dir/src/tmpp.cpp.i
 
 CMakeFiles/temple.dir/src/tmpp.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/temple.dir/src/tmpp.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/ryan/source/Templar/src/tmpp.cpp -o CMakeFiles/temple.dir/src/tmpp.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/ryan/Source/Templar/src/tmpp.cpp -o CMakeFiles/temple.dir/src/tmpp.cpp.s
 
 CMakeFiles/temple.dir/src/webserve.cpp.o: CMakeFiles/temple.dir/flags.make
-CMakeFiles/temple.dir/src/webserve.cpp.o: /home/ryan/source/Templar/src/webserve.cpp
+CMakeFiles/temple.dir/src/webserve.cpp.o: /home/ryan/Source/Templar/src/webserve.cpp
 CMakeFiles/temple.dir/src/webserve.cpp.o: CMakeFiles/temple.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/ryan/source/Templar/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/temple.dir/src/webserve.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/temple.dir/src/webserve.cpp.o -MF CMakeFiles/temple.dir/src/webserve.cpp.o.d -o CMakeFiles/temple.dir/src/webserve.cpp.o -c /home/ryan/source/Templar/src/webserve.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/ryan/Source/Templar/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/temple.dir/src/webserve.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/temple.dir/src/webserve.cpp.o -MF CMakeFiles/temple.dir/src/webserve.cpp.o.d -o CMakeFiles/temple.dir/src/webserve.cpp.o -c /home/ryan/Source/Templar/src/webserve.cpp
 
 CMakeFiles/temple.dir/src/webserve.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/temple.dir/src/webserve.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/ryan/source/Templar/src/webserve.cpp > CMakeFiles/temple.dir/src/webserve.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/ryan/Source/Templar/src/webserve.cpp > CMakeFiles/temple.dir/src/webserve.cpp.i
 
 CMakeFiles/temple.dir/src/webserve.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/temple.dir/src/webserve.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/ryan/source/Templar/src/webserve.cpp -o CMakeFiles/temple.dir/src/webserve.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/ryan/Source/Templar/src/webserve.cpp -o CMakeFiles/temple.dir/src/webserve.cpp.s
 
 # Object files for target temple
 temple_OBJECTS = \
@@ -157,7 +157,7 @@ temple: CMakeFiles/temple.dir/src/tmpp.cpp.o
 temple: CMakeFiles/temple.dir/src/webserve.cpp.o
 temple: CMakeFiles/temple.dir/build.make
 temple: CMakeFiles/temple.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/ryan/source/Templar/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Linking CXX executable temple"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/ryan/Source/Templar/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Linking CXX executable temple"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/temple.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
@@ -169,6 +169,6 @@ CMakeFiles/temple.dir/clean:
 .PHONY : CMakeFiles/temple.dir/clean
 
 CMakeFiles/temple.dir/depend:
-	cd /home/ryan/source/Templar/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/ryan/source/Templar /home/ryan/source/Templar /home/ryan/source/Templar/build /home/ryan/source/Templar/build /home/ryan/source/Templar/build/CMakeFiles/temple.dir/DependInfo.cmake "--color=$(COLOR)"
+	cd /home/ryan/Source/Templar/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/ryan/Source/Templar /home/ryan/Source/Templar /home/ryan/Source/Templar/build /home/ryan/Source/Templar/build /home/ryan/Source/Templar/build/CMakeFiles/temple.dir/DependInfo.cmake "--color=$(COLOR)"
 .PHONY : CMakeFiles/temple.dir/depend
 
