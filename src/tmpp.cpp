@@ -65,31 +65,28 @@ std::vector<int> tmpp::search_regex(const std::string &html,
 
 std::vector<int> tmpp::find_all_var(const std::string &html,
                                     const std::string &var) {
-  std::string search = std::format("\\{{\\s*\\.{}\\s*\\}}", var);
+  std::string search = std::format("\\s*\\{{\\s*\\{{\\s*\\.{}\\s*\\}}\\s*\\}}", var);
   return search_regex(html, search);
 }
 
-std::string tmpp::replace_var(std::string html, std::string var,
+void tmpp::replace_var(std::string& html, std::string var,
                               std::string val) {
   std::vector<int> var_pos = find_all_var(html, var);
-  std::string temp = html;
   int sub_val = 0;
 
   for (int i = 0; i < var_pos.size(); i++) {
     int start = var_pos[i] - 1;
-    int end_var = temp.find("}}", start) + 2;
+    int end_var = html.find("}}", start) + 2;
     int len = end_var - start;
 
-    temp.erase(start, end_var - start);
-    temp.insert(start, val);
+    html.erase(start, end_var - start);
+    html.insert(start, val);
 
     if (i != var_pos.size()) {
       sub_val += (len - val.size());
       var_pos[i + 1] -= sub_val;
     }
   }
-
-  return temp;
 }
 
 void tmpp::prep_html(std::string &html) {

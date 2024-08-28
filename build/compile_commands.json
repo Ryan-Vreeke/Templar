@@ -1,31 +1,31 @@
 [
 {
   "directory": "/home/ryan/Source/Templar/build",
-  "command": "/usr/bin/c++  -I/home/ryan/Source/Templar/includes -I/home/ryan/Source/Templar/build/_deps/json-src/include -std=gnu++20 -o CMakeFiles/temple.dir/src/Watchman.cpp.o -c /home/ryan/Source/Templar/src/Watchman.cpp",
+  "command": "/usr/bin/c++  -I/home/ryan/Source/Templar/includes -I/home/ryan/Source/Templar/build/_deps/json-src/include -g -std=gnu++20 -o CMakeFiles/temple.dir/src/Watchman.cpp.o -c /home/ryan/Source/Templar/src/Watchman.cpp",
   "file": "/home/ryan/Source/Templar/src/Watchman.cpp",
   "output": "CMakeFiles/temple.dir/src/Watchman.cpp.o"
 },
 {
   "directory": "/home/ryan/Source/Templar/build",
-  "command": "/usr/bin/c++  -I/home/ryan/Source/Templar/includes -I/home/ryan/Source/Templar/build/_deps/json-src/include -std=gnu++20 -o CMakeFiles/temple.dir/src/WebContext.cpp.o -c /home/ryan/Source/Templar/src/WebContext.cpp",
+  "command": "/usr/bin/c++  -I/home/ryan/Source/Templar/includes -I/home/ryan/Source/Templar/build/_deps/json-src/include -g -std=gnu++20 -o CMakeFiles/temple.dir/src/WebContext.cpp.o -c /home/ryan/Source/Templar/src/WebContext.cpp",
   "file": "/home/ryan/Source/Templar/src/WebContext.cpp",
   "output": "CMakeFiles/temple.dir/src/WebContext.cpp.o"
 },
 {
   "directory": "/home/ryan/Source/Templar/build",
-  "command": "/usr/bin/c++  -I/home/ryan/Source/Templar/includes -I/home/ryan/Source/Templar/build/_deps/json-src/include -std=gnu++20 -o CMakeFiles/temple.dir/src/main.cpp.o -c /home/ryan/Source/Templar/src/main.cpp",
+  "command": "/usr/bin/c++  -I/home/ryan/Source/Templar/includes -I/home/ryan/Source/Templar/build/_deps/json-src/include -g -std=gnu++20 -o CMakeFiles/temple.dir/src/main.cpp.o -c /home/ryan/Source/Templar/src/main.cpp",
   "file": "/home/ryan/Source/Templar/src/main.cpp",
   "output": "CMakeFiles/temple.dir/src/main.cpp.o"
 },
 {
   "directory": "/home/ryan/Source/Templar/build",
-  "command": "/usr/bin/c++  -I/home/ryan/Source/Templar/includes -I/home/ryan/Source/Templar/build/_deps/json-src/include -std=gnu++20 -o CMakeFiles/temple.dir/src/tmpp.cpp.o -c /home/ryan/Source/Templar/src/tmpp.cpp",
+  "command": "/usr/bin/c++  -I/home/ryan/Source/Templar/includes -I/home/ryan/Source/Templar/build/_deps/json-src/include -g -std=gnu++20 -o CMakeFiles/temple.dir/src/tmpp.cpp.o -c /home/ryan/Source/Templar/src/tmpp.cpp",
   "file": "/home/ryan/Source/Templar/src/tmpp.cpp",
   "output": "CMakeFiles/temple.dir/src/tmpp.cpp.o"
 },
 {
   "directory": "/home/ryan/Source/Templar/build",
-  "command": "/usr/bin/c++  -I/home/ryan/Source/Templar/includes -I/home/ryan/Source/Templar/build/_deps/json-src/include -std=gnu++20 -o CMakeFiles/temple.dir/src/webserve.cpp.o -c /home/ryan/Source/Templar/src/webserve.cpp",
+  "command": "/usr/bin/c++  -I/home/ryan/Source/Templar/includes -I/home/ryan/Source/Templar/build/_deps/json-src/include -g -std=gnu++20 -o CMakeFiles/temple.dir/src/webserve.cpp.o -c /home/ryan/Source/Templar/src/webserve.cpp",
   "file": "/home/ryan/Source/Templar/src/webserve.cpp",
   "output": "CMakeFiles/temple.dir/src/webserve.cpp.o"
 }

@@ -18,7 +18,7 @@ std::string WebContext::Render(int code, std::string page,
     if (variable[0] == '.')
       variable = variable.substr(1);
 
-    html = templ.replace_var(html, variable, pair.second);
+    templ.replace_var(html, variable, pair.second);
   }
 
   templ.replace_for(html);
@@ -38,7 +38,14 @@ std::string WebContext::Render(int code, std::string page,
   templ.prep_html(html);
 
   for (json::iterator it = json.begin(); it != json.end(); it++) {
-    templ.replace_var(html, it.key(), it.value());
+    std::string value;
+    if (it->is_boolean()) {
+      value = it->get<bool>() ? "true" : "false";
+    } else {
+      value = it->dump();
+    }
+
+    templ.replace_var(html, it.key(), value);
   }
 
   templ.replace_for(html);

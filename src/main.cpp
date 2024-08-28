@@ -23,34 +23,22 @@ using json = nlohmann::json;
 
 int main(int argc, char *argv[]) {
 
-  json ex1 = json::parse(R"(
-    {
-      "pi": 3.141,
-      "happy": true
-    }
-  )");
+  int port;
+  cin >> port;
 
-  for (json::iterator it = ex1.begin(); it != ex1.end(); it++) {
-    cout << it.key() << ":" << it.value() << endl;
-  }
+  web = new webserve{"../public", port};
 
-  return 1;
-  /*int port;*/
-  /*cin >> port;*/
-  /**/
-  /*web = new webserve{"./public", port};*/
-  /**/
-  /*web->GET("/", [](WebContext ctx) -> std::string {*/
-  /*  json ex1 = json::parse(R"(*/
-  /*    {*/
-  /*      "pi": 3.141,*/
-  /*      "happy": true*/
-  /*    }*/
-  /*  )");*/
-  /**/
-  /*  return ctx.Render(200, "index", ex1);*/
-  /*});*/
-  /**/
-  /*web->start();*/
+  web->GET("/", [](WebContext ctx) -> std::string {
+    json ex1 = json::parse(R"(
+      {
+        "pi": 3.141,
+        "happy": true
+      }
+    )");
+
+    return ctx.Render(200, "index", ex1);
+  });
+
+  web->start();
   return 0;
 }

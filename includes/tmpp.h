@@ -26,8 +26,8 @@ public:
   void add_file(const std::string &file);
   void remove_file(const std::string &file);
   void prep_html(std::string &html);
+  void replace_var(std::string& html, std::string var, std::string val);
 
-  std::string replace_var(std::string html, std::string var, std::string val);
   std::string load_file(std::string name);
   void replace_for(std::string &html);
 
