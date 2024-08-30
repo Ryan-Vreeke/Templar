@@ -75,7 +75,7 @@ void tmpp::replace_var(std::string& html, std::string var,
   int sub_val = 0;
 
   for (int i = 0; i < var_pos.size(); i++) {
-    int start = var_pos[i] - 1;
+    int start = var_pos[i];
     int end_var = html.find("}}", start) + 2;
     int len = end_var - start;
 
