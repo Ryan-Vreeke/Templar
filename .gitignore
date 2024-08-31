@@ -1,4 +1,4 @@
-build/
+build/*
 .cached/
 # Prerequisites
 *.d
