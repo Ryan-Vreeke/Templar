@@ -1,47 +1,44 @@
-#include <sys/socket.h>
-#include <unistd.h>
 #include <csignal>
 #include <cstdio>
 #include <cstring>
+#include <sys/socket.h>
+#include <unistd.h>
 
 #include "WebContext.h"
 #include "webserve.h"
 
-webserve* web;
+webserve *web;
 using namespace std;
 
-void signalHandler(int signal)
-{
-	if (signal == SIGINT)
-	{ std::cout << "Closing Server" << std::endl;
-		web->stop();
+void signalHandler(int signal) {
+  if (signal == SIGINT) {
+    std::cout << "Closing Server" << std::endl;
+    web->stop();
 
-		delete web;
-	}
+    delete web;
+  }
 }
 
-int main(int argc, char* argv[])
-{
-	tmpp t{"./public"};
-	auto html = t.load_file("./public/index.html");
-  t.replace_for(html);
+using json = nlohmann::json;
 
-  cout << html << endl;
+int main(int argc, char *argv[]) {
 
-	int port;
-	cin >> port;
+  int port;
+  cin >> port;
 
-	web = new webserve{"./public", port};
+  web = new webserve{"../public", port};
 
-	web->GET("/", [](WebContext ctx) -> std::string	{
-	   std::map<std::string, std::string> h = {
-	     {".Title", "Test"},
-	     {"Sub", "substitute"},
-	   };
+  web->GET("/", [](WebContext ctx) -> std::string {
+    json ex1 = json::parse(R"(
+      {
+        "pi": 3.141,
+        "happy": true
+      }
+    )");
 
-	   return ctx.Render(200, "index", h);
-	});
+    return ctx.Render(200, "index", ex1);
+  });
 
-	web->start();
-	return 0;
+  web->start();
+  return 0;
 }
