@@ -1,5 +1,0 @@
-/home/ryan/Source/Templar/build/CMakeFiles/temple.dir
-/home/ryan/Source/Templar/build/CMakeFiles/edit_cache.dir
-/home/ryan/Source/Templar/build/CMakeFiles/rebuild_cache.dir
-/home/ryan/Source/Templar/build/_deps/json-build/CMakeFiles/edit_cache.dir
-/home/ryan/Source/Templar/build/_deps/json-build/CMakeFiles/rebuild_cache.dir
