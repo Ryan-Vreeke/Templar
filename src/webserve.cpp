@@ -1,6 +1,9 @@
 #include "webserve.h"
 
 #include <asm-generic/socket.h>
+#include <cstddef>
+#include <exception>
+#include <iostream>
 #include <netinet/in.h>
 #include <stdlib.h>
 #include <string.h>
@@ -81,8 +84,12 @@ std::vector<std::string> webserve::split_string(std::string str,
   std::vector<std::string> tokens;
   std::string token;
 
-  size_t pos = 0;
   size_t start = 0;
+  size_t pos = 0;
+
+  if (delim.empty()) {
+    throw std::invalid_argument("Delimiter cannot be empty");
+  }
 
   while ((pos = str.find(delim, start)) != std::string::npos) {
     token = str.substr(start, pos - start);
@@ -91,7 +98,7 @@ std::vector<std::string> webserve::split_string(std::string str,
     tokens.push_back(token);
   }
 
-  token = str.substr(start, str.length() - start);
+  token = str.substr(start);
   tokens.push_back(token);
 
   return tokens;
@@ -112,6 +119,12 @@ void webserve::add_headers(std::map<std::string, std::string> &headers,
       continue;
     }
     headers[header_line[0]] = header_line[1];
+  }
+}
+
+void webserve::TrimPath(std::string &path) {
+  if (path[path.length() - 1] == '/' && path.length() > 1) {
+    path.erase(path.length() - 1);
   }
 }
 
@@ -141,37 +154,44 @@ void webserve::handle_client(int client_fd) {
 
   std::vector<std::string> lines = split_string(request, "\r\n");
   std::vector<std::string> request_line = split_string(lines[0], " ");
-  std::cout << request_line[1] << std::endl;
 
-  add_headers(context.headers, lines);
-
-  if (tmpp::isFile(templ.public_dir + request_line[1]) &&
-      !isPath(request_line[1])) {
-    response = send_file(templ.public_dir + request_line[1], context);
+  if (request_line.size() < 2) {
+    response = std::format("HTTP/1.1 {}\r\n", "404 Not Found");
     send(client_fd, response.c_str(), response.length(), 0);
-    close(client_fd);
     return;
   }
 
-  if (!isPath(request_line[1])) {
+  std::string path = request_line[1];
+  TrimPath(path);
+
+  std::cout << path << std::endl;
+
+  add_headers(context.headers, lines);
+
+  if (tmpp::isFile(templ.public_dir + path) &&
+      !isPath(path)) {
+    response = send_file(templ.public_dir + path, context);
+    send(client_fd, response.c_str(), response.length(), 0);
+    return;
+  }
+
+  if (!isPath(path)) {
     response = std::format("HTTP/1.1 {}\r\nContent-Type:{}\r\n\r\n{}\r\n",
                            "404 Not Found", context.headers["Accept"],
                            "PAGE NOT FOUND");
 
     send(client_fd, response.c_str(), response.length(), 0);
-    close(client_fd);
     return;
   }
 
-  if (request_line[0] == "GET" && get_map.contains(request_line[1])) {
-    response = get_map[request_line[1]](context);
-  } else if (request_line[0] == "POST" && post_map.contains(request_line[1])) {
+  if (request_line[0] == "GET") {
+    response = get_map[path](context);
+  } else if (request_line[0] == "POST") {
     context.body = lines[lines.size() - 1];
-    response = post_map[request_line[1]](context);
+    response = post_map[path](context);
   }
 
   send(client_fd, response.c_str(), response.length(), 0);
-  close(client_fd);
 }
 
 void webserve::listen_loop() {
@@ -184,8 +204,14 @@ void webserve::listen_loop() {
 
   while (running) {
     int conn_fd = accept(server_socket, (SA *)&addr, (socklen_t *)&addrlen);
+    if (conn_fd == 0)
+      continue;
 
-    std::thread client_thread([this, conn_fd]() { handle_client(conn_fd); });
+    std::thread client_thread([this, conn_fd]() {
+      handle_client(conn_fd);
+      close(conn_fd);
+    });
+
     client_thread.detach();
   }
 }
@@ -204,9 +230,7 @@ void webserve::file_created(const std::string &str) {
   templ.add_file(templ.public_dir + "/" + str);
 }
 
-void webserve::file_deleted(const std::string &str) {
-  templ.reload_defs();
-}
+void webserve::file_deleted(const std::string &str) { templ.reload_defs(); }
 
 void webserve::file_modified(const std::string &str) {
   templ.add_file(templ.public_dir + "/" + str);
