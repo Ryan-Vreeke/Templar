@@ -2,8 +2,6 @@
 
 #include <asm-generic/socket.h>
 #include <cstddef>
-#include <exception>
-#include <iostream>
 #include <netinet/in.h>
 #include <stdlib.h>
 #include <string.h>
@@ -15,6 +13,7 @@
 #include <cstring>
 #include <format>
 #include <thread>
+#include <unordered_map>
 
 #include "Watchman.h"
 #include "WebContext.h"
@@ -128,7 +127,7 @@ void webserve::TrimPath(std::string &path) {
   }
 }
 
-bool webserve::isPath(std::string path) {
+bool webserve::isPath(const std::string &path) {
   return (get_map.contains(path) || post_map.contains(path));
 }
 
@@ -144,52 +143,55 @@ std::string webserve::send_file(std::string path, WebContext context) {
       ret_code, context.headers["Accept"], page.length(), page);
 }
 
-void webserve::handle_client(int client_fd) {
-  std::string response;
-  char request[1024] = {0};
-  int valread = read(client_fd, request, 1024);
-
-  WebContext context{templ};
-  context.client_fd = client_fd;
+std::string webserve::buildResponse(const std::string &request, int client_fd) {
+  std::string path;
+  WebContext context{templ, client_fd};
 
   std::vector<std::string> lines = split_string(request, "\r\n");
   std::vector<std::string> request_line = split_string(lines[0], " ");
 
   if (request_line.size() < 2) {
-    response = std::format("HTTP/1.1 {}\r\n", "404 Not Found");
-    send(client_fd, response.c_str(), response.length(), 0);
-    return;
+    return std::format("HTTP/1.1 {}\r\n", "400 Bad Request");
   }
 
-  std::string path = request_line[1];
+  path = request_line[1];
   TrimPath(path);
-
-  std::cout << path << std::endl;
-
   add_headers(context.headers, lines);
 
-  if (tmpp::isFile(templ.public_dir + path) &&
-      !isPath(path)) {
-    response = send_file(templ.public_dir + path, context);
-    send(client_fd, response.c_str(), response.length(), 0);
-    return;
+  if (tmpp::isFile(templ.public_dir + path)) {
+    return send_file(templ.public_dir + path, context);
   }
 
   if (!isPath(path)) {
-    response = std::format("HTTP/1.1 {}\r\nContent-Type:{}\r\n\r\n{}\r\n",
-                           "404 Not Found", context.headers["Accept"],
-                           "PAGE NOT FOUND");
+    return std::format("HTTP/1.1 {}\r\nContent-Type:{}\r\n\r\n{}\r\n",
+                       "404 Not Found", context.headers["Accept"],
+                       "PAGE NOT FOUND");
+  }
 
-    send(client_fd, response.c_str(), response.length(), 0);
+  return userCall(request_line[0], path, context);
+}
+
+std::string webserve::userCall(const std::string &type, const std::string &path,
+                               WebContext &ctx) {
+
+  std::unordered_map<std::string, std::function<std::string()>> command{
+      {"GET", [&]() -> std::string { return get_map[path](ctx); }},
+      {"POST", [&]() -> std::string { return post_map[path](ctx); }},
+  };
+
+  return command[type]();
+}
+
+void webserve::handle_client(int client_fd) {
+  std::string response, request;
+  request.resize(1024);
+
+  int recv = read(client_fd, &request[0], request.size());
+  if (recv == 0)
     return;
-  }
 
-  if (request_line[0] == "GET") {
-    response = get_map[path](context);
-  } else if (request_line[0] == "POST") {
-    context.body = lines[lines.size() - 1];
-    response = post_map[path](context);
-  }
+  request.resize(recv);
+  response = buildResponse(request, client_fd);
 
   send(client_fd, response.c_str(), response.length(), 0);
 }

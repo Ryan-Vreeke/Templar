@@ -14,6 +14,7 @@ public:
   int client_fd;
 
   WebContext(tmpp _templ);
+  WebContext(tmpp _templ, int client_fd);
   WebContext(WebContext &&) = default;
   WebContext(const WebContext &) = default;
   WebContext &operator=(WebContext &&) = default;

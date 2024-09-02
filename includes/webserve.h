@@ -35,9 +35,12 @@ private:
   void listen_loop();
   void handle_client(int client_fd);
   bool contains(std::string str, std::string token);
-  void add_headers(std::map<std::string, std::string> &headers, std::vector<std::string> lines);
+  void add_headers(std::map<std::string, std::string> &headers,
+                   std::vector<std::string> lines);
+  std::string buildResponse(const std::string &request, int client_fd);
+  std::string userCall(const std::string &, const std::string &, WebContext&);
 
-  bool isPath(std::string path);
+  bool isPath(const std::string &path);
   void TrimPath(std::string &path);
 
   void file_created(const std::string &str);

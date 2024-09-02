@@ -3,6 +3,9 @@
 
 WebContext::WebContext(tmpp _templ) : templ(_templ) {}
 
+WebContext::WebContext(tmpp _templ, int client_fd)
+    : templ(_templ), client_fd(client_fd) {}
+
 WebContext::~WebContext() {}
 
 std::string WebContext::Render(int code, std::string page,
