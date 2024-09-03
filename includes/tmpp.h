@@ -26,7 +26,7 @@ public:
   void add_file(const std::string &file);
   void remove_file(const std::string &file);
   void prep_html(std::string &html);
-  void replace_var(std::string& html, std::string var, std::string val);
+  void replace_var(std::string &html, std::string var, std::string val);
 
   std::string load_file(std::string name);
   void replace_for(std::string &html);
@@ -53,6 +53,6 @@ private:
 
   std::vector<int> find_for(const std::string &text);
   std::vector<int> find_break(const std::string &text);
-  int get_iterations(const std::string &html, int for_pos);
+  int get_iterations(const std::string &sub_html);
   std::string get_content(const std::string &html, int start, int end);
 };

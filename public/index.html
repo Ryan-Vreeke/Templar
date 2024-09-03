@@ -17,10 +17,12 @@
     ></script>
   </head>
   <body>
-    <script src="script.js"></script>
-
     <h1>{{.pi}}</h1>
-    <h1>{{.happy}}</h1>
+    {{for .(pi)}}
+    <h1>hi</h1>
+    {{/for}}
+
+
   </body>
 </html>
 {{end}}
