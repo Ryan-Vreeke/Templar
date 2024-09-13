@@ -14,6 +14,7 @@ public:
   int client_fd;
 
   WebContext(tmpp _templ);
+  WebContext(tmpp _templ, int client_fd);
   WebContext(WebContext &&) = default;
   WebContext(const WebContext &) = default;
   WebContext &operator=(WebContext &&) = default;
@@ -22,6 +23,7 @@ public:
 
   std::string Render(int code, std::string page, std::map<std::string, std::string> var);
   std::string Render(int code, std::string page, nlohmann::json json);
+  std::string Render(int code, nlohmann::json json);
 
 private:
   tmpp templ;
