@@ -27,22 +27,10 @@ int main(int argc, char *argv[]) {
   cin >> port;
 
   web = new webserve{"../public", port};
-
-  web->GET("/api", [](WebContext ctx) -> std::string {
-    json ex1 = json::parse(R"(
-      {
-        "pi": 3.141,
-        "happy": true
-      }
-    )");
-
-    return ctx.Render(200, ex1);
-  });
-
   web->GET("/", [](WebContext ctx) -> std::string {
     json ex1 = json::parse(R"(
       {
-        "pi": 3.141,
+        "pi": 4,
         "happy": true
       }
     )");

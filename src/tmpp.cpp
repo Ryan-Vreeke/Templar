@@ -5,10 +5,13 @@
 #include <cstdio>
 #include <filesystem>
 #include <format>
+#include <iterator>
 #include <queue>
 #include <regex>
 #include <string>
 #include <vector>
+#include <algorithm>
+#include <cctype>
 
 namespace fs = std::filesystem;
 
@@ -65,8 +68,7 @@ std::vector<int> tmpp::search_regex(const std::string &html,
 
 std::vector<int> tmpp::find_all_var(const std::string &html,
                                     const std::string &var) {
-  std::string search =
-      std::format("\\s*\\{{\\s*\\{{\\s*\\.{}\\s*\\}}\\s*\\}}", var);
+  std::string search = std::format("\\.{}\\b", var);//TODO: TEST
   return search_regex(html, search);
 }
 
@@ -143,7 +145,7 @@ std::vector<int> tmpp::find_break(const std::string &text) {
 }
 
 std::vector<int> tmpp::find_for(const std::string &text) {
-  std::string pattern("\\{\\s*\\{for\\s*\\.\\(\\d+\\)\\s*\\}\\s*\\}");
+  std::string pattern("\\{\\s*\\{for\\s*\\d+\\s*\\}\\s*\\}");//TODO: TEST
   return search_regex(text, pattern);
 }
 
@@ -175,11 +177,11 @@ void tmpp::replace_for(std::string &html) {
     int start = fStack.top() + startOffset;
     int end = break_positions[i] + endOffset;
     fStack.pop();
-
-    int iter = get_iterations(html, start);
     std::string content = get_content(html, start, end);
 
     end = html.find("}}", end) + 2;
+
+    int iter = get_iterations(html.substr(start, end - start));
     html.erase(start, end - start);
 
     for (int k = 0; k < iter; k++) {
@@ -198,11 +200,25 @@ void tmpp::replace_for(std::string &html) {
   }
 }
 
-int tmpp::get_iterations(const std::string &html, int for_pos) {
-  int iter = html.find("(", for_pos + 2) + 1;
-  int end = html.find(")", iter);
+//TODO: TEST CODE
+int tmpp::get_iterations(const std::string &sub_html) {
+  bool found_digit = false;
+  std::string number;
+  for(char c : sub_html){
+    if(!std::isdigit(c)){
+      if(found_digit){
+        break;
+      }
 
-  return std::stoi(html.substr(iter, end - iter));
+      continue;
+    }
+
+
+    number += c;
+    found_digit = true;
+  }
+
+  return std::stoi(number);
 }
 
 std::string tmpp::get_content(const std::string &html, int start, int end) {
