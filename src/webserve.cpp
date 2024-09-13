@@ -158,11 +158,9 @@ std::string webserve::buildResponse(const std::string &request, int client_fd) {
   TrimPath(path);
   add_headers(context.headers, lines);
 
-  if (tmpp::isFile(templ.public_dir + path)) {
+  if (tmpp::isFile(templ.public_dir + path) && !isPath(path)) {
     return send_file(templ.public_dir + path, context);
-  }
-
-  if (!isPath(path)) {
+  } else if (!isPath(path)) {
     return std::format("HTTP/1.1 {}\r\nContent-Type:{}\r\n\r\n{}\r\n",
                        "404 Not Found", context.headers["Accept"],
                        "PAGE NOT FOUND");
