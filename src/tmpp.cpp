@@ -1,5 +1,7 @@
 #include "tmpp.h"
 
+#include <algorithm>
+#include <cctype>
 #include <climits>
 #include <cstddef>
 #include <cstdio>
@@ -10,8 +12,6 @@
 #include <regex>
 #include <string>
 #include <vector>
-#include <algorithm>
-#include <cctype>
 
 namespace fs = std::filesystem;
 
@@ -68,7 +68,7 @@ std::vector<int> tmpp::search_regex(const std::string &html,
 
 std::vector<int> tmpp::find_all_var(const std::string &html,
                                     const std::string &var) {
-  std::string search = std::format("\\.{}\\b", var);//TODO: TEST
+  std::string search = std::format("\\.{}\\b", var);
   return search_regex(html, search);
 }
 
@@ -78,10 +78,9 @@ void tmpp::replace_var(std::string &html, std::string var, std::string val) {
 
   for (int i = 0; i < var_pos.size(); i++) {
     int start = var_pos[i];
-    int end_var = html.find("}}", start) + 2;
-    int len = end_var - start;
+    int len = var.length() + 1;
 
-    html.erase(start, end_var - start);
+    html.erase(start, len);
     html.insert(start, val);
 
     if (i != var_pos.size()) {
@@ -145,7 +144,7 @@ std::vector<int> tmpp::find_break(const std::string &text) {
 }
 
 std::vector<int> tmpp::find_for(const std::string &text) {
-  std::string pattern("\\{\\s*\\{for\\s*\\d+\\s*\\}\\s*\\}");//TODO: TEST
+  std::string pattern("\\{\\s*\\{for\\s*\\.\\(\\d+\\)\\s*\\}\\s*\\}");
   return search_regex(text, pattern);
 }
 
@@ -200,19 +199,18 @@ void tmpp::replace_for(std::string &html) {
   }
 }
 
-//TODO: TEST CODE
+// TODO: TEST CODE
 int tmpp::get_iterations(const std::string &sub_html) {
   bool found_digit = false;
   std::string number;
-  for(char c : sub_html){
-    if(!std::isdigit(c)){
-      if(found_digit){
+  for (char c : sub_html) {
+    if (!std::isdigit(c)) {
+      if (found_digit) {
         break;
       }
 
       continue;
     }
-
 
     number += c;
     found_digit = true;

@@ -18,7 +18,8 @@
   </head>
   <body>
     <h1>{{.pi}}</h1>
-    {{for .(pi)}}
+
+    {{for .(.pi)}}
     <h1>hi</h1>
     {{/for}}
 
