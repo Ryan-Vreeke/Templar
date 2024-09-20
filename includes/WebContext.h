@@ -24,6 +24,7 @@ public:
   std::string Render(int code, std::string page, std::map<std::string, std::string> var);
   std::string Render(int code, std::string page, nlohmann::json json);
   std::string Render(int code, nlohmann::json json);
+  std::string Render(int code, std::string page);
 
 private:
   tmpp templ;
