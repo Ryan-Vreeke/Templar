@@ -67,8 +67,7 @@ std::string WebContext::Render(int code, nlohmann::json json) {
       response_map[code], json.dump());
 }
 
-
-std::string WebContext::Render(int code, std::string page){
+std::string WebContext::Render(int code, std::string page) {
   if (!templ.block_contents.contains(page))
     return std::format("HTTP/1.1 {}\r\nContent-Type:{}\r\n\r\n{}\r\n",
                        response_map[code], "text/html; charset=UTF-8", page);
@@ -81,4 +80,20 @@ std::string WebContext::Render(int code, std::string page){
   return std::format(
       "HTTP/1.1 {}\r\nContent-Type:{}\r\nContent-Lenght:{}\r\n\r\n{}\r\n",
       response_map[code], "text/html; charset=UTF-8", html.length(), html);
+}
+
+std::string WebContext::Render(int code) {
+  return std::format("HTTP/1.1 {}\r\n\r\n", response_map[code]);
+}
+
+std::string WebContext::Respond(int code, std::string response) {
+  return std::format(
+      "HTTP/1.1 {}\r\nContent-Type:text/html; charset=UTF-8\r\n\r\n{}\r\n",
+      response_map[code], response);
+}
+
+std::string WebContext::Respond(int code, nlohmann::json response) {
+  return std::format(
+      "HTTP/1.1 {}\r\nContent-Type:application/json\r\n\r\n{}\r\n",
+      response_map[code], response.dump());
 }

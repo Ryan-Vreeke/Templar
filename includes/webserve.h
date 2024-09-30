@@ -2,11 +2,17 @@
 
 #include <functional>
 #include <map>
+#include <unordered_map>
 
 #include "Watchman.h"
 #include "WebContext.h"
 #include "tmpp.h"
 
+inline std::unordered_map<std::string, char> encoded_char = {
+    {"%22", '"'}, {"%23", '#'}, {"%24", '$'}, {"%27", '\''}, {"%28", '('},
+    {"%29", ')'}, {"%2C", ','}, {"%2F", '/'}, {"%3A", ':'},  {"%3B", ';'},
+    {"%3D", '='}, {"%40", '@'}, {"%5B", '['}, {"%5D", ']'},  {"%20", ' '},
+    {"%2B", '+'}, {"%26", '&'}, {"%25", '%'}, {"%0A", '\n'}, {"%0D", '\r'}};
 class webserve {
 public:
   webserve(std::string pages, int port = 3000);
@@ -33,12 +39,13 @@ private:
   std::map<std::string, std::function<std::string(WebContext)>> post_map;
 
   void listen_loop();
+  void buildBody(const std::string &request, WebContext &context);
+  std::unordered_map<std::string, std::string> parseArgs(const std::string &args);
   void handle_client(int client_fd);
   bool contains(std::string str, std::string token);
-  void add_headers(std::map<std::string, std::string> &headers,
-                   std::vector<std::string> lines);
+  void add_headers(std::map<std::string, std::string> &headers, std::vector<std::string> lines);
   std::string buildResponse(const std::string &request, int client_fd);
-  std::string userCall(const std::string &, const std::string &, WebContext&);
+  std::string userCall(const std::string &, const std::string &, WebContext &);
 
   bool isPath(const std::string &path);
   void TrimPath(std::string &path);

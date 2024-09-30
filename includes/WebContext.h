@@ -10,7 +10,7 @@ using json = nlohmann::json;
 class WebContext {
 public:
   std::map<std::string, std::string> headers;
-  std::string body;
+  nlohmann::json body;
   int client_fd;
 
   WebContext(tmpp _templ);
@@ -25,6 +25,9 @@ public:
   std::string Render(int code, std::string page, nlohmann::json json);
   std::string Render(int code, nlohmann::json json);
   std::string Render(int code, std::string page);
+  std::string Render(int code);
+  std::string Respond(int code, std::string response);
+  std::string Respond(int code, nlohmann::json response);
 
 private:
   tmpp templ;

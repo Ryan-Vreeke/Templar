@@ -143,6 +143,59 @@ std::string webserve::send_file(std::string path, WebContext context) {
       ret_code, context.headers["Accept"], page.length(), page);
 }
 
+std::unordered_map<std::string, std::string>
+webserve::parseArgs(const std::string &encoded_string) {
+  std::string key;
+  std::string decoding;
+  std::unordered_map<std::string, std::string> pairs;
+
+  for (size_t i = 0; i < encoded_string.length(); ++i) {
+    char c = encoded_string[i];
+    if (c == '%') {
+      std::string code = encoded_string.substr(i, 3);
+      if (encoded_char.find(code) != encoded_char.end()) {
+        decoding += encoded_char[code];
+        i += 2;
+        continue;
+      }
+    }
+
+    if (c == '+') {
+      c = ' ';
+    }
+
+    if (encoded_string[i] == '=') {
+      key = decoding;
+      decoding.clear();
+    } else if (encoded_string[i] == '&') {
+      pairs[key] = decoding;
+      key.clear();
+      decoding.clear();
+    } else {
+      decoding += c;
+    }
+  }
+
+  pairs[key] = decoding;
+  return pairs;
+}
+
+void webserve::buildBody(const std::string &request, WebContext &context) {
+  auto body_split = split_string(request, "\r\n\r\n");
+  if (body_split.size() < 1 || body_split[1] == "")
+    return;
+
+  if (contains(context.headers["Content-Type"],
+               "application/x-www-form-urlencoded")) {
+    for (const auto &[key, value] : parseArgs(body_split[1])) {
+      context.body[key] = value;
+    }
+    return;
+  }
+
+  context.body = nlohmann::json::parse(body_split[1]);
+}
+
 std::string webserve::buildResponse(const std::string &request, int client_fd) {
   std::string path;
   WebContext context{templ, client_fd};
@@ -165,6 +218,8 @@ std::string webserve::buildResponse(const std::string &request, int client_fd) {
                        "404 Not Found", context.headers["Accept"],
                        "PAGE NOT FOUND");
   }
+
+  buildBody(request, context);
 
   return userCall(request_line[0], path, context);
 }
